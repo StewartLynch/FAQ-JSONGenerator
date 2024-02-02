@@ -24,7 +24,7 @@ struct MainScreen: View {
             AppFAQsListView(application: router.application)
                 .navigationSplitViewColumnWidth(200)
         } detail: {
-            FAQView(faq: router.fAQ)
+            FAQUpdateView(model: FAQFormModel(fAQ: router.fAQ))
         }
         .navigationSplitViewStyle(.balanced)
     }

@@ -59,6 +59,9 @@ struct AppFAQsListView: View {
             }
             router.fAQ = nil
         }
+        .onChange(of: router.fAQ) {
+            print(router.fAQ?.question)
+        }
     }
     
     func updateLevels() {

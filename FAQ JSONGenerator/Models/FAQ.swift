@@ -66,33 +66,34 @@ class FAQ {
     var sortOrder: Int
     var question: String
     var answer: String
-    var linkType: String?
+    var linkType: String
     @Relationship(deleteRule: .cascade)
     var link: Link?
     
+    
+    
     var qImage: String {
-        if let linkType, let  linkENum = LinkType(rawValue: linkType) {
-            switch linkENum {
+        let  linkEnum = LinkType(rawValue: linkType) ?? .none
+            switch linkEnum {
             case .video:
                 return "video.fill"
             case .weblink:
                 return "link"
+            default:
+                return "quote.opening"
             }
-        } else {
-            return "quote.opening"
+    }
+        
+        init(level: Int, sortOrder: Int, question: String, answer: String, linkType: LinkType = .none, link: Link? = nil) {
+            self.level = level
+            self.sortOrder = sortOrder
+            self.question = question
+            self.answer = answer
+            self.linkType = linkType.rawValue
+            self.link = link
         }
     }
 
-    
-    init(level: Int, sortOrder: Int, question: String, answer: String, linkType: LinkType? = nil, link: Link? = nil) {
-        self.level = level
-        self.sortOrder = sortOrder
-        self.question = question
-        self.answer = answer
-        self.linkType = linkType?.rawValue
-        self.link = link
-    }
-}
 
 @Model
 class Link {
@@ -105,6 +106,7 @@ class Link {
 }
 
 enum LinkType: String, Codable, Identifiable, CaseIterable {
+    case none
     case video
     case weblink
     var id: Self {
