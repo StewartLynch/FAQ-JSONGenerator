@@ -12,18 +12,13 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+@Observable
+class Router {
+    var application: Application?
+    var fAQ: FAQ?
+    
+    func reset() {
+        application = nil
+        fAQ = nil
     }
-}
-
-#Preview {
-    ContentView()
 }

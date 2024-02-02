@@ -11,12 +11,16 @@
 
 
 import SwiftUI
+import SwiftData
 
 @main
 struct FAQ_JSONGeneratorApp: App {
+    @State private var router = Router()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainScreen()
         }
+        .modelContainer(for: Application.self)
+        .environment(router)
     }
 }
