@@ -22,55 +22,102 @@ struct AppFAQsListView: View {
     var body: some View {
         Group {
             if let application {
-                if !application.faqs.isEmpty {
-                    if levels.count > 0 {
-                        Picker("Select Level", selection: $selectedLevel) {
-                            EmptyView().tag(nil as Int?)
-                            ForEach(levels, id: \.self) { level in
-                                Text("Level \(level)").tag(level as Int?)
+                Group {
+                    if !application.faqs.isEmpty {
+                        if levels.count > 0 {
+                            Picker("Select Level", selection: $selectedLevel) {
+                                EmptyView().tag(nil as Int?)
+                                ForEach(levels, id: \.self) { level in
+                                    Text("Level \(level)").tag(level as Int?)
+                                }
                             }
                         }
+                        List(selection: Bindable(router).fAQ) {
+                            ForEach(sortedFAQs){ faq in
+                                HStack  {
+                                    Image(systemName: faq.qImage)
+                                    Text(faq.question)
+                                    Text("\(faq.sortOrder)")
+                                }.tag(faq)
+                            }
+                            .onMove { from, to in
+                                sortedFAQs.move(fromOffsets: from, toOffset: to)
+                                resort(level: selectedLevel!)
+                            }
+                        }
+                    } else {
+                        ContentUnavailableView("No FAQs yet", systemImage: "diamond")
                     }
-                    List(sortedFAQs, selection: Bindable(router).fAQ) { faq in
-                        HStack  {
-                            Image(systemName: faq.qImage)
-                            Text(faq.question)
-                        }.tag(faq)
-                    }
-                } else {
-                    ContentUnavailableView("No FAQs yet", systemImage: "diamond")
                 }
-                
+                .toolbar {
+                    if router.application != nil  {
+                        ToolbarItem(placement: .primaryAction){
+                                Button {
+                                    // New FAQ
+                                } label: {
+                                    Text("New FAQ")
+                                }
+                            }
+                    }
+                }
             } else {
                 ContentUnavailableView("Select an application from the list", systemImage: "diamond")
             }
         }
-        .onAppear {
-            updateLevels()
-        }
+
         .onChange(of: application) {
             updateLevels()
+            sortBySelectedLevel()
         }
         .onChange(of: selectedLevel) {
-            if let selectedLevel, let application {
-                sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == selectedLevel}
-            } else {
-                sortedFAQs = []
-            }
-            router.fAQ = nil
+            sortBySelectedLevel()
         }
-        .onChange(of: router.fAQ) {
-            print(router.fAQ?.question)
+        .onChange(of: router.didChangeLevel) {
+            updateLevels()
+            sortBySelectedLevel()
+            router.didChangeLevel = false
         }
+    }
+    
+    
+    func sortBySelectedLevel() {
+        if let selectedLevel, let application {
+            sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == selectedLevel}
+        } else {
+            sortedFAQs = []
+        }
+        router.fAQ = nil
+        
     }
     
     func updateLevels() {
         if let application, !application.faqs.isEmpty {
             levels = Array(Set(application.faqs.map { $0.level })).sorted(by: <)
+            if router.didChangeLevel {
+                // Update sort orders
+                levels.forEach { level in
+                    sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == level}
+                    resort(level: level)
+//                    sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == level}
+//                    sortedFAQs.indices.forEach { index in
+//                        sortedFAQs[index].sortOrder = index + 1
+//                    }
+                }
+            }
             selectedLevel = levels[0]
 
         } else {
             selectedLevel = nil
+        }
+    }
+    
+    
+    func resort(level: Int) {
+        if let application, !application.faqs.isEmpty {
+//            sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == level}
+            sortedFAQs.indices.forEach { index in
+                sortedFAQs[index].sortOrder = index + 1
+            }
         }
     }
     

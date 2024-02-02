@@ -16,6 +16,7 @@ import SwiftUI
 class Router {
     var application: Application?
     var fAQ: FAQ?
+    var didChangeLevel = false
     
     func reset() {
         application = nil

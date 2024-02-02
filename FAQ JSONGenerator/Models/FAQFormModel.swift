@@ -12,38 +12,22 @@
 
 import SwiftUI
 
-@Observable
-class FAQFormModel {
+struct FAQFormModel {
     var level: Int = 1
     var question: String = ""
     var answer: String = ""
-    var linkType: String = LinkType.none.rawValue
+    var linkType: LinkType = .none
     var linkTitle: String = ""
     var linkURL: String = ""
-    
-    var linkTypeEnum: LinkType {
-        LinkType(rawValue: linkType) ?? .none
-    }
-    
-    var fAQ: FAQ?
+
     var application: Application?
-    
-    var updating: Bool {
-        fAQ != nil
-    }
     
     init(application: Application) {
        // new
         self.application = application
     }
     
-    init(fAQ: FAQ?) {
-        self.fAQ = fAQ
-        self.level = fAQ?.level ?? 1
-        self.question = fAQ?.question ?? ""
-        self.answer = fAQ?.answer ?? ""
-        self.linkType = fAQ?.linkType ?? LinkType.none.rawValue
-        self.linkTitle = fAQ?.link?.title ?? ""
-        self.linkURL = fAQ?.link?.url ?? ""
+    init() {
+
     }
 }

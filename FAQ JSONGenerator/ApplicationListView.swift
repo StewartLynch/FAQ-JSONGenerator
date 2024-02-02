@@ -15,7 +15,10 @@ import SwiftData
 
 struct ApplicationListView: View {
     @Environment(Router.self) var router
+    @Environment(\.modelContext) var modelContext
     @Query(sort: \Application.name) var applications: [Application]
+    @State private var appName = ""
+    @State private var newApp = false
     var body: some View {
         Group {
             if !applications.isEmpty {
@@ -26,8 +29,29 @@ struct ApplicationListView: View {
                 ContentUnavailableView("No Applications yet", systemImage: "diamond.fill")
             }
         }
-        .onChange(of: router.application) { oldValue, newValue in
-            print(newValue?.name ?? "No Name")
+        .alert(
+            "New Application",
+            isPresented: $newApp,
+            actions: {
+                TextField("Enter your name", text: $appName)
+                Button("OK") {
+                    if !appName.isEmpty {
+                        let newApp = Application(name: appName)
+                        modelContext.insert(newApp)
+                        router.application = newApp
+                    }
+                }
+            },
+            message: {
+                Text("New Appliction JSON")
+            }
+        )
+        .toolbar {
+            Button {
+                newApp.toggle()
+            } label: {
+                Image(systemName: "plus.circle.fill")
+            }
         }
     }
 }

@@ -18,29 +18,74 @@ struct FAQUpdateView: View {
     @State var model: FAQFormModel
     
     var body: some View {
-//        if router.fAQ != nil {
-            if model.fAQ != nil {
-                    Form {
-                        TextField("Question", text: $model.question)
-                        TextField("Answer", text: $model.answer)
-                        Picker("Link Type", selection: $model.linkType) {
-                            ForEach(LinkType.allCases) { linkType in
-                                Text(linkType.rawValue).tag(linkType.rawValue)
-                            }
-                        }
-                        if model.linkTypeEnum != .none {
-                            TextField("Link Title", text: $model.linkTitle)
-                            TextField("URL", text: $model.linkURL)
-                            
+        Group {
+            if router.fAQ != nil {
+                Form {
+                    TextField("Question", text: $model.question)
+                    TextField("Answer", text: $model.answer)
+                    Picker("Level", selection: $model.level) {
+                        ForEach(1..<6, id: \.self) { level in
+                            Text("Level \(level)").tag(level)
                         }
                     }
-//                }
-        } else {
-            ContentUnavailableView("Select FAQ", systemImage: "diamond")
+                    Picker("Link Type", selection: $model.linkType) {
+                        ForEach(LinkType.allCases) { linkType in
+                            Text(linkType.rawValue).tag(linkType)
+                        }
+                    }
+                    if model.linkType != .none {
+                        TextField("Link Title", text: $model.linkTitle)
+                        TextField("URL", text: $model.linkURL)
+                        
+                    }
+                    if changed {
+                        Button("Update") {
+                            let didChangeLevel = router.fAQ?.level != model.level
+                            router.didChangeLevel = didChangeLevel
+                            print("Level changed: \(didChangeLevel)")
+                            router.fAQ?.question = model.question
+                            router.fAQ?.answer = model.answer
+                            router.fAQ?.level = model.level
+                            router.fAQ?.linkType = model.linkType.rawValue
+                            if model.linkType == .none {
+                                router.fAQ?.link = nil
+                            } else {
+                                router.fAQ?.link?.title = model.linkTitle
+                                router.fAQ?.link?.url = model.linkURL
+                            }
+                            router.fAQ = nil
+                        }
+                    }
+                }
+            } else {
+                ContentUnavailableView("Select FAQ", systemImage: "diamond")
+            }
+        }
+        .toolbar {
+            Button("") {
+                
+            }
+        }
+        .onChange(of: router.fAQ) {
+            if let fAQ = router.fAQ {
+                model.question = fAQ.question
+                model.answer = fAQ.answer
+                model.level = fAQ.level
+                model.linkType = fAQ.linkTypeEnum
+                model.linkTitle = fAQ.link?.title ?? ""
+                model.linkURL = fAQ.link?.url ?? ""
+            }
         }
     }
     
+    var changed: Bool {
+        router.fAQ?.question != model.question ||
+        router.fAQ?.answer != model.answer ||
+        router.fAQ?.level != model.level ||
+        router.fAQ?.linkType != model.linkType.rawValue
         
+    }
+
     
 }
 
@@ -49,6 +94,8 @@ struct FAQUpdateView: View {
     let fetchDescriptor = FetchDescriptor<Application>()
     let application = try! container.mainContext.fetch(fetchDescriptor)[0]
     let faq = application.faqs[0]
-    return FAQUpdateView(model: FAQFormModel(fAQ: faq))
-        .environment(Router())
+    let router = Router()
+    router.fAQ = faq
+    return FAQUpdateView(model: FAQFormModel())
+        .environment(router)
 }

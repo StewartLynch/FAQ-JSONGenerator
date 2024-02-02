@@ -22,11 +22,12 @@ struct MainScreen: View {
                 .navigationSplitViewColumnWidth(175)
         } content: {
             AppFAQsListView(application: router.application)
-                .navigationSplitViewColumnWidth(200)
+                .navigationSplitViewColumnWidth(350)
         } detail: {
-            FAQUpdateView(model: FAQFormModel(fAQ: router.fAQ))
+            FAQUpdateView(model: FAQFormModel())
         }
         .navigationSplitViewStyle(.balanced)
+        .frame(minWidth: 925)
     }
 }
 

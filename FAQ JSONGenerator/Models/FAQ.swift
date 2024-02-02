@@ -32,7 +32,6 @@ extension Application {
                 isStoredInMemoryOnly: true
             )
         )
-//        return container
         let apps = [Application(name: "Sample Application 1"), Application(name: "Sample Application 2")]
         let links: [LinkType : Link] = [
             .video : Link(title: "Watch Video", url: "https://www.createchsol.com"),
@@ -41,18 +40,19 @@ extension Application {
         
         var faqs: [FAQ] {
             [
-                FAQ(level: 1, sortOrder: 1, question: "Level 1 Question 1", answer: "Level 1 Answer 1"),
-                FAQ(level: 1, sortOrder: 2, question: "Level 1 Question 2", answer: "Level 1 Answer 2",linkType: .video, link: links[.video]),
-                FAQ(level: 1, sortOrder: 3, question: "Level 1 Question 3", answer: "Level 1 Answer 3",linkType: .weblink, link: links[.weblink]),
-                FAQ(level: 2, sortOrder: 1, question: "Level 2 Question 1", answer: "Level 2 Answer 1"),
-                FAQ(level: 2, sortOrder: 2, question: "Level 2 Question 2", answer: "Level 2 Answer 2",linkType: .video, link: links[.video]),
-                FAQ(level: 2, sortOrder: 3, question: "Level 2 Question 3", answer: "Level 2 Answer 3",linkType: .weblink, link: links[.weblink]),
+                FAQ(level: 1, sortOrder: 1, question: "Q 1-1", answer: "Level 1 Answer 1"),
+                FAQ(level: 1, sortOrder: 2, question: "Q 1-2", answer: "Level 1 Answer 2",linkType: .video, link: links[.video]),
+                FAQ(level: 1, sortOrder: 3, question: "Q 1-3", answer: "Level 1 Answer 3",linkType: .weblink, link: links[.weblink]),
+                FAQ(level: 2, sortOrder: 1, question: "Q 2-1", answer: "Level 2 Answer 1"),
+                FAQ(level: 2, sortOrder: 2, question: "Q 2-2", answer: "Level 2 Answer 2",linkType: .video, link: links[.video]),
+                FAQ(level: 2, sortOrder: 3, question: "Q 2-3", answer: "Level 2 Answer 3",linkType: .weblink, link: links[.weblink]),
             ]
         }
         
         apps.forEach { app in
             container.mainContext.insert(app)
             faqs.forEach { faq in
+                faq.question = app.name + " " + faq.question
                 app.faqs.append(faq)
             }
         }
@@ -70,7 +70,9 @@ class FAQ {
     @Relationship(deleteRule: .cascade)
     var link: Link?
     
-    
+    var linkTypeEnum: LinkType {
+        LinkType(rawValue: linkType) ?? .none
+    }
     
     var qImage: String {
         let  linkEnum = LinkType(rawValue: linkType) ?? .none
