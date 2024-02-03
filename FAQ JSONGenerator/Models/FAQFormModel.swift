@@ -22,6 +22,10 @@ struct FAQFormModel {
 
     var application: Application?
     
+    var isNew: Bool {
+        application != nil
+    }
+    
     init(application: Application) {
        // new
         self.application = application

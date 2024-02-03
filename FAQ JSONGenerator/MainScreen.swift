@@ -19,7 +19,7 @@ struct MainScreen: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             ApplicationListView()
-                .navigationSplitViewColumnWidth(175)
+                .navigationSplitViewColumnWidth(250)
         } content: {
             AppFAQsListView(application: router.application)
                 .navigationSplitViewColumnWidth(350)
@@ -27,7 +27,13 @@ struct MainScreen: View {
             FAQUpdateView(model: FAQFormModel())
         }
         .navigationSplitViewStyle(.balanced)
-        .frame(minWidth: 925)
+        .frame(
+          minWidth: 1200,
+          idealWidth: 1200,
+          maxWidth: .infinity,
+          minHeight: 600,
+          idealHeight: 600,
+          maxHeight: .infinity)
     }
 }
 

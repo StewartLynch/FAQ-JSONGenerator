@@ -1,5 +1,5 @@
 //
-// Created for FAQ JSONGenerator
+// Created for FAQGenerator
 // by  Stewart Lynch on 2024-02-01
 //
 // Follow me on Mastodon: @StewartLynch@iosdev.space
@@ -19,6 +19,7 @@ struct ApplicationListView: View {
     @Query(sort: \Application.name) var applications: [Application]
     @State private var appName = ""
     @State private var newApp = false
+    @State private var editApp = false
     var body: some View {
         Group {
             if !applications.isEmpty {
@@ -30,27 +31,70 @@ struct ApplicationListView: View {
             }
         }
         .alert(
+            "Edit Application name",
+            isPresented: $editApp,
+            actions: {
+                TextField("Application name", text: $appName)
+                Button("OK") {
+                    if !appName.isEmpty {
+                        router.application?.name = appName
+                    }
+                    router.application = nil
+                }
+            },
+            message: {
+                Text("Edit Application Name")
+            }
+        )
+        .alert(
             "New Application",
             isPresented: $newApp,
             actions: {
-                TextField("Enter your name", text: $appName)
+                TextField("Application name", text: $appName)
                 Button("OK") {
                     if !appName.isEmpty {
                         let newApp = Application(name: appName)
                         modelContext.insert(newApp)
-                        router.application = newApp
+                        router.application = nil
                     }
                 }
             },
             message: {
-                Text("New Appliction JSON")
+                Text("New Application JSON")
             }
         )
         .toolbar {
-            Button {
-                newApp.toggle()
-            } label: {
-                Image(systemName: "plus.circle.fill")
+            ToolbarItem {
+                Button {
+                    appName = ""
+                    newApp.toggle()
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .help("Create new App FAQ JSON")
+            }
+            if router.application != nil {
+                ToolbarItem {
+                    Button {
+                        appName = router.application?.name ?? ""
+                        editApp.toggle()
+                    } label: {
+                        Image(systemName: "pencil")
+                    }
+                    .help("Edit App Name")
+                }
+                ToolbarItem {
+                    Button {
+                        if let application = router.application {
+                            modelContext.delete(application)
+                            router.application = nil
+                        }
+                        
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                    .help("Delete App")
+                }
             }
         }
     }

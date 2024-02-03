@@ -19,11 +19,16 @@ struct AppFAQsListView: View {
     @State private var sortedFAQs = [FAQ]()
     @State private var selectedLevel: Int? = nil
     @State private var levels: [Int] = []
+    @State private var newFAQ = false
     var body: some View {
-        Group {
-            if let application {
-                Group {
-                    if !application.faqs.isEmpty {
+                VStack {
+                    if router.application != nil  {
+                                Button("New FAQ", systemImage: "plus.circle.fill") {
+                                    newFAQ.toggle()
+                                }
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                    }
+                    if let application, !application.faqs.isEmpty {
                         if levels.count > 0 {
                             Picker("Select Level", selection: $selectedLevel) {
                                 EmptyView().tag(nil as Int?)
@@ -31,6 +36,7 @@ struct AppFAQsListView: View {
                                     Text("Level \(level)").tag(level as Int?)
                                 }
                             }
+                            .frame(width: 200)
                         }
                         List(selection: Bindable(router).fAQ) {
                             ForEach(sortedFAQs){ faq in
@@ -48,23 +54,19 @@ struct AppFAQsListView: View {
                     } else {
                         ContentUnavailableView("No FAQs yet", systemImage: "diamond")
                     }
+                    Spacer()
                 }
-                .toolbar {
-                    if router.application != nil  {
-                        ToolbarItem(placement: .primaryAction){
-                                Button {
-                                    // New FAQ
-                                } label: {
-                                    Text("New FAQ")
-                                }
-                            }
+                .padding()
+                .sheet(isPresented: $newFAQ, onDismiss: {
+                    // Update
+                    updateLevels()
+                    sortBySelectedLevel()
+                    
+                }) {
+                    if let application = router.application {
+                        FAQUpdateView(model: FAQFormModel(application: application))
                     }
                 }
-            } else {
-                ContentUnavailableView("Select an application from the list", systemImage: "diamond")
-            }
-        }
-
         .onChange(of: application) {
             updateLevels()
             sortBySelectedLevel()
@@ -72,10 +74,10 @@ struct AppFAQsListView: View {
         .onChange(of: selectedLevel) {
             sortBySelectedLevel()
         }
-        .onChange(of: router.didChangeLevel) {
+        .onChange(of: router.needsListRefresh) {
             updateLevels()
             sortBySelectedLevel()
-            router.didChangeLevel = false
+            router.needsListRefresh = false
         }
     }
     
@@ -93,15 +95,11 @@ struct AppFAQsListView: View {
     func updateLevels() {
         if let application, !application.faqs.isEmpty {
             levels = Array(Set(application.faqs.map { $0.level })).sorted(by: <)
-            if router.didChangeLevel {
+            if router.needsListRefresh {
                 // Update sort orders
                 levels.forEach { level in
                     sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == level}
                     resort(level: level)
-//                    sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == level}
-//                    sortedFAQs.indices.forEach { index in
-//                        sortedFAQs[index].sortOrder = index + 1
-//                    }
                 }
             }
             selectedLevel = levels[0]

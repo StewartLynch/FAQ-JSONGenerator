@@ -1,5 +1,5 @@
 //
-// Created for FAQ JSONGenerator
+// Created for FAQGenerator
 // by  Stewart Lynch on 2024-02-01
 //
 // Follow me on Mastodon: @StewartLynch@iosdev.space
@@ -16,54 +16,122 @@ import SwiftData
 struct FAQUpdateView: View {
     @Environment(Router.self) var router
     @State var model: FAQFormModel
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         Group {
-            if router.fAQ != nil {
-                Form {
-                    TextField("Question", text: $model.question)
-                    TextField("Answer", text: $model.answer)
-                    Picker("Level", selection: $model.level) {
-                        ForEach(1..<6, id: \.self) { level in
-                            Text("Level \(level)").tag(level)
+            if router.fAQ != nil || model.isNew {
+                VStack {
+                    Form {
+                        Section(header: Text("Question"))  {
+                            TextEditor(text: $model.question)
+                                .frame(height: 100)
                         }
-                    }
-                    Picker("Link Type", selection: $model.linkType) {
-                        ForEach(LinkType.allCases) { linkType in
-                            Text(linkType.rawValue).tag(linkType)
+                        Section(header: Text("Answer")) {
+                            TextEditor(text: $model.answer)
+                                .frame(height: 100)
                         }
-                    }
-                    if model.linkType != .none {
-                        TextField("Link Title", text: $model.linkTitle)
-                        TextField("URL", text: $model.linkURL)
-                        
-                    }
-                    if changed {
-                        Button("Update") {
-                            let didChangeLevel = router.fAQ?.level != model.level
-                            router.didChangeLevel = didChangeLevel
-                            print("Level changed: \(didChangeLevel)")
-                            router.fAQ?.question = model.question
-                            router.fAQ?.answer = model.answer
-                            router.fAQ?.level = model.level
-                            router.fAQ?.linkType = model.linkType.rawValue
-                            if model.linkType == .none {
-                                router.fAQ?.link = Link()
-                            } else {
-                                router.fAQ?.link.title = model.linkTitle
-                                router.fAQ?.link.url = model.linkURL
+                        Section(header: Text("Level")) {
+                            Picker("", selection: $model.level) {
+                                ForEach(1..<6, id: \.self) { level in
+                                    Text("Level \(level)").tag(level)
+                                }
                             }
-                            router.fAQ = nil
+                            .frame(width: 200)
+                        }
+                            Section(header: Text("Link Type")) {
+                                Picker("", selection: $model.linkType) {
+                                    ForEach(LinkType.allCases) { linkType in
+                                        Text(linkType.rawValue).tag(linkType)
+                                    }
+                                }
+                                .frame(width: 200)
+                            }
+
+                        if model.linkType != .none {
+                            Section(header: Text("Link Title")) {
+                                TextField("", text: $model.linkTitle)
+                            }
+                            Section(header: Text("URL")) {
+                                TextField("", text: $model.linkURL)
+                            }
+                        }
+                        
+                        if !model.isNew {
+                            HStack {
+                                Spacer()
+                                Button("Delete", systemImage: "trash", role: .destructive) {
+                                    if let faq = router.fAQ, let application = router.application {
+                                        router.fAQ = nil
+//                                        modelContext.delete(faq)
+                                        if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
+                                            application.faqs.remove(at: index)
+                                        }
+//                                        try? modelContext.save()
+                                        router.needsListRefresh = true
+                                    }
+                                }
+
+                                if changed {
+                                    Button("Update") {
+                                        let needsListRefresh = router.fAQ?.level != model.level
+                                        router.needsListRefresh = needsListRefresh
+                                        router.fAQ?.question = model.question
+                                        router.fAQ?.answer = model.answer
+                                        router.fAQ?.level = model.level
+                                        router.fAQ?.linkType = model.linkType.rawValue
+                                        if model.linkType == .none {
+                                            router.fAQ?.link.title = ""
+                                            router.fAQ?.link.url = ""
+                                        } else {
+                                            router.fAQ?.link.title = model.linkTitle
+                                            router.fAQ?.link.url = model.linkURL
+                                        }
+                                        router.fAQ = nil
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .padding()
+                    Spacer()
+                }
+                .frame(width: 500)
+                .toolbar {
+                    ToolbarItem {
+                        Spacer()
+                    }
+                    if model.isNew {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                dismiss()
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Add") {
+                                let newFAQ = FAQ(
+                                    level: model.level,
+                                    sortOrder: (router.application?.faqs.count ?? 0) + 1,
+                                    question: model.question,
+                                    answer: model.answer
+                                )
+                                newFAQ.linkType = model.linkType.rawValue
+                                if let application = router.application {
+                                    application.faqs.append(newFAQ)
+                                    try? modelContext.save()
+                                }
+                                if model.linkType != .none {
+                                    newFAQ.link.title = model.linkTitle
+                                    newFAQ.link.url = model.linkURL
+                                }
+                                dismiss()
+                            }
                         }
                     }
                 }
             } else {
                 ContentUnavailableView("Select FAQ", systemImage: "diamond")
-            }
-        }
-        .toolbar {
-            Button("") {
-                
             }
         }
         .onChange(of: router.fAQ) {
@@ -82,10 +150,10 @@ struct FAQUpdateView: View {
         router.fAQ?.question != model.question ||
         router.fAQ?.answer != model.answer ||
         router.fAQ?.level != model.level ||
-        router.fAQ?.linkType != model.linkType.rawValue
-        
+        router.fAQ?.linkType != model.linkType.rawValue ||
+        router.fAQ?.link.title != model.linkTitle ||
+        router.fAQ?.link.url != model.linkURL
     }
-
     
 }
 

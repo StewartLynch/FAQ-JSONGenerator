@@ -23,4 +23,8 @@ struct FAQ_JSONGeneratorApp: App {
         .modelContainer(for: Application.self)
         .environment(router)
     }
+    
+    init() {
+        print(URL.applicationSupportDirectory.path(percentEncoded: false))
+    }
 }
