@@ -48,10 +48,10 @@ struct FAQUpdateView: View {
                             router.fAQ?.level = model.level
                             router.fAQ?.linkType = model.linkType.rawValue
                             if model.linkType == .none {
-                                router.fAQ?.link = nil
+                                router.fAQ?.link = Link()
                             } else {
-                                router.fAQ?.link?.title = model.linkTitle
-                                router.fAQ?.link?.url = model.linkURL
+                                router.fAQ?.link.title = model.linkTitle
+                                router.fAQ?.link.url = model.linkURL
                             }
                             router.fAQ = nil
                         }
@@ -72,8 +72,8 @@ struct FAQUpdateView: View {
                 model.answer = fAQ.answer
                 model.level = fAQ.level
                 model.linkType = fAQ.linkTypeEnum
-                model.linkTitle = fAQ.link?.title ?? ""
-                model.linkURL = fAQ.link?.url ?? ""
+                model.linkTitle = fAQ.link.title
+                model.linkURL = fAQ.link.url
             }
         }
     }

@@ -41,11 +41,11 @@ extension Application {
         var faqs: [FAQ] {
             [
                 FAQ(level: 1, sortOrder: 1, question: "Q 1-1", answer: "Level 1 Answer 1"),
-                FAQ(level: 1, sortOrder: 2, question: "Q 1-2", answer: "Level 1 Answer 2",linkType: .video, link: links[.video]),
-                FAQ(level: 1, sortOrder: 3, question: "Q 1-3", answer: "Level 1 Answer 3",linkType: .weblink, link: links[.weblink]),
+                FAQ(level: 1, sortOrder: 2, question: "Q 1-2", answer: "Level 1 Answer 2",linkType: .video, link: links[.video]!),
+                FAQ(level: 1, sortOrder: 3, question: "Q 1-3", answer: "Level 1 Answer 3",linkType: .weblink, link: links[.weblink]!),
                 FAQ(level: 2, sortOrder: 1, question: "Q 2-1", answer: "Level 2 Answer 1"),
-                FAQ(level: 2, sortOrder: 2, question: "Q 2-2", answer: "Level 2 Answer 2",linkType: .video, link: links[.video]),
-                FAQ(level: 2, sortOrder: 3, question: "Q 2-3", answer: "Level 2 Answer 3",linkType: .weblink, link: links[.weblink]),
+                FAQ(level: 2, sortOrder: 2, question: "Q 2-2", answer: "Level 2 Answer 2",linkType: .video, link: links[.video]!),
+                FAQ(level: 2, sortOrder: 3, question: "Q 2-3", answer: "Level 2 Answer 3",linkType: .weblink, link: links[.weblink]!),
             ]
         }
         
@@ -68,7 +68,7 @@ class FAQ {
     var answer: String
     var linkType: String
     @Relationship(deleteRule: .cascade)
-    var link: Link?
+    var link: Link
     
     var linkTypeEnum: LinkType {
         LinkType(rawValue: linkType) ?? .none
@@ -86,7 +86,7 @@ class FAQ {
             }
     }
         
-        init(level: Int, sortOrder: Int, question: String, answer: String, linkType: LinkType = .none, link: Link? = nil) {
+        init(level: Int, sortOrder: Int, question: String, answer: String, linkType: LinkType = .none, link: Link = Link()) {
             self.level = level
             self.sortOrder = sortOrder
             self.question = question
