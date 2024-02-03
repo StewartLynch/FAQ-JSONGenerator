@@ -16,8 +16,14 @@ import SwiftData
 @Model
 class Application {
     var name: String
-    init(name: String) {
+    var baseURL: String
+    var videoFolder: String = "videos"
+    var htmlFolder: String = "html"
+    init(name: String, baseURL: String, videoFolder: String = "videos", htmlFolder: String = "html") {
         self.name = name
+        self.baseURL = baseURL
+        self.videoFolder = videoFolder
+        self.htmlFolder = htmlFolder
     }
     @Relationship(deleteRule: .cascade)
     var faqs: [FAQ] = []
@@ -32,7 +38,7 @@ extension Application {
                 isStoredInMemoryOnly: true
             )
         )
-        let apps = [Application(name: "Sample Application 1"), Application(name: "Sample Application 2")]
+        let apps = [Application(name: "TripMapper", baseURL: ""), Application(name: "My Workouts", baseURL: "")]
         let links: [LinkType : Link] = [
             .video : Link(title: "Watch Video", url: "https://www.createchsol.com"),
             .weblink : Link(title: "More Information", url: "https://www.createchsol.com")
@@ -81,6 +87,8 @@ class FAQ {
                 return "video.fill"
             case .weblink:
                 return "link"
+            case .external:
+                return "globe.americas.fill"
             default:
                 return "quote.opening"
             }
@@ -109,8 +117,9 @@ class Link {
 
 enum LinkType: String, Codable, Identifiable, CaseIterable {
     case none
-    case video
-    case weblink
+    case video = "Local Video"
+    case weblink = "Local Link"
+    case external = "External Link"
     var id: Self {
         self
     }

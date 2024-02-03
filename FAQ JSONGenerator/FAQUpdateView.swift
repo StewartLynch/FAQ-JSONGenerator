@@ -52,9 +52,16 @@ struct FAQUpdateView: View {
                         if model.linkType != .none {
                             Section(header: Text("Link Title")) {
                                 TextField("", text: $model.linkTitle)
+                                    .frame(width: 400)
                             }
-                            Section(header: Text("URL")) {
+                            let text = switch model.linkType {
+                            case .none: ""
+                            case .external: "URL"
+                            default: "Path from baseURL"
+                            }
+                            Section(header: Text(text)) {
                                 TextField("", text: $model.linkURL)
+                                    .frame(width: 400)
                             }
                         }
                         
@@ -64,11 +71,9 @@ struct FAQUpdateView: View {
                                 Button("Delete", systemImage: "trash", role: .destructive) {
                                     if let faq = router.fAQ, let application = router.application {
                                         router.fAQ = nil
-//                                        modelContext.delete(faq)
                                         if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
                                             application.faqs.remove(at: index)
                                         }
-//                                        try? modelContext.save()
                                         router.needsListRefresh = true
                                     }
                                 }

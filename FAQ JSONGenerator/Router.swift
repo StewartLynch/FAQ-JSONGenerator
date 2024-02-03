@@ -22,4 +22,41 @@ class Router {
         application = nil
         fAQ = nil
     }
+    
+    func export() -> String {
+        var exportArray = [ExportJSON.FAQ]()
+        if let application {
+            application.faqs.forEach { faq in
+                var newExportFAQ = ExportJSON.FAQ(
+                    level: faq.level,
+                    sortOrder: faq.sortOrder,
+                    question: faq.question,
+                    answer: faq.answer,
+                    linkType: faq.linkType
+                )
+                if faq.linkTypeEnum != .none {
+                    newExportFAQ.link = ExportJSON.Link(
+                        title: faq.link.title,
+                        url: faq.link.url
+                    )
+                }
+                exportArray.append(newExportFAQ)
+            }
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            do {
+                let jsonData = try encoder.encode(exportArray)
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    return jsonString
+                } else {
+                    return ""
+                }
+            } catch {
+                print("Error encoding ExportJSON: \(error)")
+                return ""
+            }
+        } else {
+            return ""
+        }
+    }
 }

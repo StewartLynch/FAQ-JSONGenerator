@@ -18,8 +18,7 @@ struct ApplicationListView: View {
     @Environment(\.modelContext) var modelContext
     @Query(sort: \Application.name) var applications: [Application]
     @State private var appName = ""
-    @State private var newApp = false
-    @State private var editApp = false
+    @State private var appFormType: AppFormType?
     var body: some View {
         Group {
             if !applications.isEmpty {
@@ -30,44 +29,11 @@ struct ApplicationListView: View {
                 ContentUnavailableView("No Applications yet", systemImage: "diamond.fill")
             }
         }
-        .alert(
-            "Edit Application name",
-            isPresented: $editApp,
-            actions: {
-                TextField("Application name", text: $appName)
-                Button("OK") {
-                    if !appName.isEmpty {
-                        router.application?.name = appName
-                    }
-                    router.application = nil
-                }
-            },
-            message: {
-                Text("Edit Application Name")
-            }
-        )
-        .alert(
-            "New Application",
-            isPresented: $newApp,
-            actions: {
-                TextField("Application name", text: $appName)
-                Button("OK") {
-                    if !appName.isEmpty {
-                        let newApp = Application(name: appName)
-                        modelContext.insert(newApp)
-                        router.application = nil
-                    }
-                }
-            },
-            message: {
-                Text("New Application JSON")
-            }
-        )
+        .sheet(item: $appFormType) { $0 }
         .toolbar {
             ToolbarItem {
                 Button {
-                    appName = ""
-                    newApp.toggle()
+                    appFormType = .new
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -76,8 +42,9 @@ struct ApplicationListView: View {
             if router.application != nil {
                 ToolbarItem {
                     Button {
-                        appName = router.application?.name ?? ""
-                        editApp.toggle()
+                        if let application = router.application {
+                            appFormType = .update(application)
+                        }
                     } label: {
                         Image(systemName: "pencil")
                     }

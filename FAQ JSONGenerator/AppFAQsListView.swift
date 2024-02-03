@@ -22,11 +22,20 @@ struct AppFAQsListView: View {
     @State private var newFAQ = false
     var body: some View {
                 VStack {
-                    if router.application != nil  {
-                                Button("New FAQ", systemImage: "plus.circle.fill") {
-                                    newFAQ.toggle()
+                    HStack {
+                        Spacer()
+                        if let application = router.application  {
+                                    Button("New FAQ", systemImage: "plus.circle.fill") {
+                                        newFAQ.toggle()
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                            if !application.faqs.isEmpty {
+                                Button("Export") {
+                                    
+                                    print(router.export())
                                 }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
+                            }
+                        }
                     }
                     if let application, !application.faqs.isEmpty {
                         if levels.count > 0 {
