@@ -56,8 +56,9 @@ struct FAQUpdateView: View {
                             }
                             let text = switch model.linkType {
                             case .none: ""
+                            case .video: "Video file name"
+                            case .weblink: "html file/path name relative to application html folder"
                             case .external: "URL"
-                            default: "Path from baseURL"
                             }
                             Section(header: Text(text)) {
                                 TextField("", text: $model.linkURL)

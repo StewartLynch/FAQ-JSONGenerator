@@ -80,27 +80,37 @@ struct AppFormView: View {
                 TextField("Base URL", text: $model.baseURL)
                 TextField("Video Folder", text: $model.videoFolder)
                 TextField("HTML Folder", text: $model.htmlFolder)
-                Button(model.updating ? "Update" : "Create") {
-                    
-                    if model.updating {
-                        model.application?.name = model.name
-                        model.application?.baseURL = model.baseURLPath
-                        model.application?.videoFolder = model.videoFolder
-                        model.application?.htmlFolder = model.videoFolder
-                    } else {
-                        let newApp = Application(
-                            name: model.name,
-                            baseURL: model.baseURLPath,
-                            videoFolder: model.videoFolder,
-                            htmlFolder: model.htmlFolder
-                        )
-                        modelContext.insert(newApp)
-                    }
-                    dismiss()
-                }
             }
             .padding()
             .frame(width: 500)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(model.updating ? "Update" : "Create") {
+                        
+                        if model.updating {
+                            model.application?.name = model.name
+                            model.application?.baseURL = model.baseURLPath
+                            model.application?.videoFolder = model.videoFolder
+                            model.application?.htmlFolder = model.videoFolder
+                        } else {
+                            let newApp = Application(
+                                name: model.name,
+                                baseURL: model.baseURLPath,
+                                videoFolder: model.videoFolder,
+                                htmlFolder: model.htmlFolder
+                            )
+                            modelContext.insert(newApp)
+                        }
+                        dismiss()
+                    }
+                    .disabled(model.disabled)
+                }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }

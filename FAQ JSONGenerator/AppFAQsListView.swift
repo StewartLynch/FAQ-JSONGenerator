@@ -31,8 +31,23 @@ struct AppFAQsListView: View {
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                             if !application.faqs.isEmpty {
                                 Button("Export") {
-                                    
-                                    print(router.export())
+                                    if let jsonData = router.exportJSONData() {
+                                        let savePanel = NSSavePanel()
+                                        let suggestedFileName = application.name.replacingOccurrences(of: " ", with: "")
+                                        savePanel.nameFieldStringValue = suggestedFileName
+                                        savePanel.allowedContentTypes = [.json]
+                                        
+                                        savePanel.begin { result in
+                                            if result == .OK, let url = savePanel.url {
+                                                do {
+                                                    try jsonData.write(to: url)
+                                                    print("JSON exported successfully.")
+                                                } catch {
+                                                    print("Error writing JSON data: \(error)")
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

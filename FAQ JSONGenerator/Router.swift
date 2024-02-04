@@ -23,7 +23,7 @@ class Router {
         fAQ = nil
     }
     
-    func export() -> String {
+    func exportJSONData() -> Data? {
         var exportArray = [ExportJSON.FAQ]()
         if let application {
             application.faqs.forEach { faq in
@@ -34,29 +34,43 @@ class Router {
                     answer: faq.answer,
                     linkType: faq.linkType
                 )
-                if faq.linkTypeEnum != .none {
+                switch faq.linkTypeEnum {
+                case .video:
+                    newExportFAQ.link = ExportJSON.Link(
+                        title: faq.link.title,
+                        url: application.baseURL + application.videoFolder + "/" + faq.link.url
+                    )
+                case .weblink:
+                    newExportFAQ.link = ExportJSON.Link(
+                        title: faq.link.title,
+                        url: application.baseURL + application.htmlFolder  + "/" + faq.link.url
+                    )
+                case .external:
                     newExportFAQ.link = ExportJSON.Link(
                         title: faq.link.title,
                         url: faq.link.url
                     )
+                default: break
                 }
                 exportArray.append(newExportFAQ)
             }
             let encoder = JSONEncoder()
+            encoder.outputFormatting = .withoutEscapingSlashes
             encoder.outputFormatting = .prettyPrinted
             do {
                 let jsonData = try encoder.encode(exportArray)
                 if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    return jsonString
+                    print(jsonString)
                 } else {
-                    return ""
+                    print( "")
                 }
+                return jsonData
             } catch {
                 print("Error encoding ExportJSON: \(error)")
-                return ""
+                return nil
             }
         } else {
-            return ""
+            return nil
         }
     }
 }
