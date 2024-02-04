@@ -17,6 +17,7 @@ class Router {
     var application: Application?
     var fAQ: FAQ?
     var needsListRefresh = false
+    var appCount = 0
     
     func reset() {
         application = nil

@@ -26,8 +26,16 @@ struct ApplicationListView: View {
                     Text(application.name).tag(application)
                 }
             } else {
-                ContentUnavailableView("No Applications yet", systemImage: "diamond.fill")
+                ContentUnavailableView("Add an Application", image: "mac128", description: Text("Tap on the \(Image(systemName: "plus")) button above to add your first application."))
             }
+        }
+        .onAppear {
+            print("Appear")
+            router.appCount = applications.count
+        }
+        .onChange(of: applications) {
+            print("Changed")
+            router.appCount = applications.count
         }
         .sheet(item: $appFormType) { $0 }
         .toolbar {
