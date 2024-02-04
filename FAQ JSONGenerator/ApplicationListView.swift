@@ -26,7 +26,9 @@ struct ApplicationListView: View {
                     Text(application.name).tag(application)
                 }
             } else {
-                ContentUnavailableView("Add an Application", image: "mac128", description: Text("Tap on the \(Image(systemName: "plus")) button above to add your first application."))
+                ContentUnavailableView {
+                    Text("Tap on the \(Image(systemName: "plus")) button above to add your first application.")
+                }
             }
         }
         .onAppear {

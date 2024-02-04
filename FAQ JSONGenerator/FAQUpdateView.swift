@@ -21,25 +21,30 @@ struct FAQUpdateView: View {
     
     var body: some View {
         Group {
-            if router.fAQ != nil || model.isNew {
-                VStack {
-                    Form {
-                        Section(header: Text("Question"))  {
-                            TextEditor(text: $model.question)
-                                .frame(height: 100)
-                        }
-                        Section(header: Text("Answer")) {
-                            TextEditor(text: $model.answer)
-                                .frame(height: 100)
-                        }
-                        Section(header: Text("Level")) {
-                            Picker("", selection: $model.level) {
-                                ForEach(1..<6, id: \.self) { level in
-                                    Text("Level \(level)").tag(level)
-                                }
+            if router.appCount == 0 ||
+                (router.appCount > 0 && router.application == nil &&  !model.isNew) ||
+                router.appCount > 0 && router.application != nil && router.application!.faqs.isEmpty &&  !model.isNew {
+                Image(.mac128)
+            } else {
+                if router.fAQ != nil || model.isNew {
+                    VStack {
+                        Form {
+                            Section(header: Text("Question"))  {
+                                TextEditor(text: $model.question)
+                                    .frame(height: 100)
                             }
-                            .frame(width: 200)
-                        }
+                            Section(header: Text("Answer")) {
+                                TextEditor(text: $model.answer)
+                                    .frame(height: 100)
+                            }
+                            Section(header: Text("Level")) {
+                                Picker("", selection: $model.level) {
+                                    ForEach(1..<6, id: \.self) { level in
+                                        Text("Level \(level)").tag(level)
+                                    }
+                                }
+                                .frame(width: 200)
+                            }
                             Section(header: Text("Link Type")) {
                                 Picker("", selection: $model.linkType) {
                                     ForEach(LinkType.allCases) { linkType in
@@ -48,96 +53,97 @@ struct FAQUpdateView: View {
                                 }
                                 .frame(width: 200)
                             }
-
-                        if model.linkType != .none {
-                            Section(header: Text("Link Title")) {
-                                TextField("", text: $model.linkTitle)
-                                    .frame(width: 400)
-                            }
-                            let text = switch model.linkType {
-                            case .none: ""
-                            case .video: "Video file name"
-                            case .weblink: "html file/path name relative to application html folder"
-                            case .external: "URL"
-                            }
-                            Section(header: Text(text)) {
-                                TextField("", text: $model.linkURL)
-                                    .frame(width: 400)
-                            }
-                        }
-                        
-                        if !model.isNew {
-                            HStack {
-                                Spacer()
-                                Button("Delete", systemImage: "trash", role: .destructive) {
-                                    if let faq = router.fAQ, let application = router.application {
-                                        router.fAQ = nil
-                                        if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
-                                            application.faqs.remove(at: index)
-                                        }
-                                        router.needsListRefresh = true
-                                    }
+                            
+                            if model.linkType != .none {
+                                Section(header: Text("Link Title")) {
+                                    TextField("", text: $model.linkTitle)
+                                        .frame(width: 400)
                                 }
-
-                                if changed {
-                                    Button("Update") {
-                                        let needsListRefresh = router.fAQ?.level != model.level
-                                        router.needsListRefresh = needsListRefresh
-                                        router.fAQ?.question = model.question
-                                        router.fAQ?.answer = model.answer
-                                        router.fAQ?.level = model.level
-                                        router.fAQ?.linkType = model.linkType.rawValue
-                                        if model.linkType == .none {
-                                            router.fAQ?.link.title = ""
-                                            router.fAQ?.link.url = ""
-                                        } else {
-                                            router.fAQ?.link.title = model.linkTitle
-                                            router.fAQ?.link.url = model.linkURL
-                                        }
-                                        router.fAQ = nil
-                                    }
+                                let text = switch model.linkType {
+                                case .none: ""
+                                case .video: "Video file name"
+                                case .weblink: "html file/path name relative to application html folder"
+                                case .external: "URL"
+                                }
+                                Section(header: Text(text)) {
+                                    TextField("", text: $model.linkURL)
+                                        .frame(width: 400)
                                 }
                             }
+                            
+                            if !model.isNew {
+                                HStack {
+                                    Spacer()
+                                    Button("Delete", systemImage: "trash", role: .destructive) {
+                                        if let faq = router.fAQ, let application = router.application {
+                                            router.fAQ = nil
+                                            if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
+                                                application.faqs.remove(at: index)
+                                            }
+                                            router.needsListRefresh = true
+                                        }
+                                    }
+                                    
+                                    if changed {
+                                        Button("Update") {
+                                            let needsListRefresh = router.fAQ?.level != model.level
+                                            router.needsListRefresh = needsListRefresh
+                                            router.fAQ?.question = model.question
+                                            router.fAQ?.answer = model.answer
+                                            router.fAQ?.level = model.level
+                                            router.fAQ?.linkType = model.linkType.rawValue
+                                            if model.linkType == .none {
+                                                router.fAQ?.link.title = ""
+                                                router.fAQ?.link.url = ""
+                                            } else {
+                                                router.fAQ?.link.title = model.linkTitle
+                                                router.fAQ?.link.url = model.linkURL
+                                            }
+                                            router.fAQ = nil
+                                        }
+                                    }
+                                }
+                            }
                         }
-                    }
-                    .padding()
-                    Spacer()
-                }
-                .frame(width: 500)
-                .toolbar {
-                    ToolbarItem {
+                        .padding()
                         Spacer()
                     }
-                    if model.isNew {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                dismiss()
-                            }
+                    .frame(width: 500)
+                    .toolbar {
+                        ToolbarItem {
+                            Spacer()
                         }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Add") {
-                                let newFAQ = FAQ(
-                                    level: model.level,
-                                    sortOrder: (router.application?.faqs.count ?? 0) + 1,
-                                    question: model.question,
-                                    answer: model.answer
-                                )
-                                newFAQ.linkType = model.linkType.rawValue
-                                if let application = router.application {
-                                    application.faqs.append(newFAQ)
-                                    try? modelContext.save()
+                        if model.isNew {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Cancel") {
+                                    dismiss()
                                 }
-                                if model.linkType != .none {
-                                    newFAQ.link.title = model.linkTitle
-                                    newFAQ.link.url = model.linkURL
+                            }
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Add") {
+                                    let newFAQ = FAQ(
+                                        level: model.level,
+                                        sortOrder: (router.application?.faqs.count ?? 0) + 1,
+                                        question: model.question,
+                                        answer: model.answer
+                                    )
+                                    newFAQ.linkType = model.linkType.rawValue
+                                    if let application = router.application {
+                                        application.faqs.append(newFAQ)
+                                        try? modelContext.save()
+                                    }
+                                    if model.linkType != .none {
+                                        newFAQ.link.title = model.linkTitle
+                                        newFAQ.link.url = model.linkURL
+                                    }
+                                    dismiss()
                                 }
-                                dismiss()
                             }
                         }
                     }
+                } else {
+                    ContentUnavailableView("Select FAQ", systemImage: "hand.point.left.fill")
                 }
-            } else {
-                ContentUnavailableView("Select FAQ", systemImage: "diamond")
             }
         }
         .onChange(of: router.fAQ) {

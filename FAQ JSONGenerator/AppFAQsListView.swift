@@ -160,7 +160,8 @@ struct AppFAQsListView: View {
                         }
                     } else {
                         // MARK: NO FAQs
-                        ContentUnavailableView("No FAQs yet", image: "mac128", description: Text("Either import from an existing JSON file or start adding new FAQs"))
+                        Spacer()
+                        ContentUnavailableView("No FAQs yet", systemImage: "square.and.pencil", description: Text("Either import from an existing JSON file or start adding new FAQs"))
                     }
                     Spacer()
                 }
