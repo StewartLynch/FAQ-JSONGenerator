@@ -22,6 +22,8 @@ struct AppFAQsListView: View {
     @State private var levels: [Int] = []
     @State private var newFAQ = false
     @State private var importWarning = false
+    @State private var removeAll = false
+    @State private var importFailed = false
     var body: some View {
         Group {
         if router.appCount > 0 {
@@ -33,75 +35,24 @@ struct AppFAQsListView: View {
                         if let application = router.application  {
                             // MARK: Import button
                             Button("Import JSON", systemImage: "arrow.up") {
+                                importFailed = false
                                 importWarning.toggle()
                             }
                             .alert("Import JSON", isPresented: $importWarning) {
                                 Button("Cancel", role: .cancel) {
                                     
                                 }
-                                Button("OK") {
-                                    let openPanel = NSOpenPanel()
-                                    openPanel.title = "Choose a file"
-                                    openPanel.showsResizeIndicator = true
-                                    openPanel.showsHiddenFiles = false
-                                    openPanel.canChooseDirectories = false
-                                    openPanel.canCreateDirectories = false
-                                    openPanel.allowsMultipleSelection = false
-                                    openPanel.allowedContentTypes = [.json]
-                                    guard openPanel.runModal() == .OK else {
-                                        return
-                                    }
-                                    if let url = openPanel.url {
-                                        do {
-                                            let fileContents = try String(contentsOf: url)
-                                            let jsonData = Data(fileContents.utf8)
-                                            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                                print(jsonString)
-                                            } else {
-                                                print( "")
-                                            }
-                                            let decoder = JSONDecoder()
-                                            let faqs = try decoder.decode([ExportJSON.FAQ].self, from: jsonData)
-                                            application.faqs.removeAll()
-                                            faqs.forEach { faq in
-                                                let linkType = LinkType(rawValue: faq.linkType) ?? .none
-                                                let newFAQ = FAQ(
-                                                    level: faq.level,
-                                                    sortOrder: faq.sortOrder,
-                                                    question: faq.question,
-                                                    answer:   faq.answer,
-                                                    linkType: linkType
-                                                )
-                                                application.faqs.append(newFAQ)
-                                                try? modelContext.save()
-                                                if let link = faq.link {
-                                                    switch linkType {
-                                                    case .none:
-                                                        break
-                                                    case .video:
-                                                        newFAQ.link.title = link.title
-                                                        newFAQ.link.url = link.url.components(separatedBy: "/").last ?? ""
-                                                    case .weblink:
-                                                        newFAQ.link.title = link.title
-                                                        newFAQ.link.url = link.url.components(separatedBy: "/").last ?? ""
-                                                    case .external:
-                                                        newFAQ.link.url = link.url
-                                                    }
-                                                }
-                                                try? modelContext.save()
-                                            }
-                                            updateLevels()
-                                            sortBySelectedLevel()
-                                            
-                                        } catch {
-                                            // Handle errors while reading or decoding the file
-                                            print("Error reading or decoding file: \(error.localizedDescription)")
-                                        }
-                                    }
+                                Button("Append") {
+                                    importFAQs()
+                                }
+                                Button("Replace") {
+                                    removeAll = true
+                                    importFAQs()
                                 }
                             } message: {
-                                Text("Importing will replace existing FAQs")
+                                Text("Import FAQs from an existing JSON File.")
                             }
+                            
                             // MARK: Export button
                             if !application.faqs.isEmpty {
                                 // We have some faqs so show the export button
@@ -131,6 +82,11 @@ struct AppFAQsListView: View {
                             }
                         }
                     }
+                    .alert("Import Failed", isPresented: $importFailed, actions: {
+                        
+                    }, message: {
+                        Text("Could not decode that JSON file.  It must be in the wrong format.")
+                    })
                     // MARK: - Appliction Selected Content
                     // MARK: FAQs > 0
                     
@@ -242,6 +198,74 @@ struct AppFAQsListView: View {
             //            sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == level}
             sortedFAQs.indices.forEach { index in
                 sortedFAQs[index].sortOrder = index + 1
+            }
+        }
+    }
+    
+    func importFAQs() {
+        if let application = router.application {
+            let openPanel = NSOpenPanel()
+            openPanel.title = "Choose a file"
+            openPanel.showsResizeIndicator = true
+            openPanel.showsHiddenFiles = false
+            openPanel.canChooseDirectories = false
+            openPanel.canCreateDirectories = false
+            openPanel.allowsMultipleSelection = false
+            openPanel.allowedContentTypes = [.json]
+            guard openPanel.runModal() == .OK else {
+                return
+            }
+            if let url = openPanel.url {
+                do {
+                    let fileContents = try String(contentsOf: url)
+                    let jsonData = Data(fileContents.utf8)
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print(jsonString)
+                    } else {
+                        print( "")
+                    }
+                    let decoder = JSONDecoder()
+                    let faqs = try decoder.decode([ExportJSON.FAQ].self, from: jsonData)
+                    if removeAll {
+                        application.faqs.removeAll()
+                    }
+                    faqs.forEach { faq in
+                        let linkType = LinkType(rawValue: faq.linkType) ?? .none
+                        let newFAQ = FAQ(
+                            level: faq.level,
+                            sortOrder: faq.sortOrder,
+                            question: faq.question,
+                            answer:   faq.answer,
+                            linkType: linkType
+                        )
+                        application.faqs.append(newFAQ)
+                        try? modelContext.save()
+                        if let link = faq.link {
+                            switch linkType {
+                            case .none:
+                                break
+                            case .video:
+                                newFAQ.link.title = link.title
+                                newFAQ.link.url = link.url.components(separatedBy: "/").last ?? ""
+                            case .weblink:
+                                newFAQ.link.title = link.title
+                                newFAQ.link.url = link.url.components(separatedBy: "/").last ?? ""
+                            case .external:
+                                newFAQ.link.url = link.url
+                            }
+                        }
+                        try? modelContext.save()
+                    }
+                    router.needsListRefresh = true
+                    updateLevels()
+                    sortBySelectedLevel()
+                    router.needsListRefresh = false
+                    removeAll = false
+                } catch {
+                    // Handle errors while reading or decoding the file
+                    print("Error reading or decoding file: \(error.localizedDescription)")
+                    importFailed = true
+                }
             }
         }
     }
