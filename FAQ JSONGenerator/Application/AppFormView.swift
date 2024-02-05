@@ -30,7 +30,6 @@ struct AppFormView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(model.updating ? "Update" : "Create") {
-                        
                         if model.updating {
                             model.application?.name = model.name
                             model.application?.baseURL = model.baseURLPath

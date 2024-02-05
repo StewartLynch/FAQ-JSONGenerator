@@ -15,40 +15,17 @@ import SwiftData
 
 @main
 struct FAQ_JSONGeneratorApp: App {
-    @State private var appState = AppState()
+    var appState = AppState()
+    @AppStorage("displayMode") var displayMode = DisplayMode.auto
     var body: some Scene {
         WindowGroup {
             MainScreen()
         }
         .modelContainer(for: Application.self)
-        .environment(appState)
         .commands {
-            SidebarCommands()
-            ToolbarCommands()
-            CommandGroup(replacing: .newItem) {
-                Button("Add Application") {
-                    appState.appFormType = .new
-                }
-                .keyboardShortcut("n", modifiers: [.shift, .command])
-            }
-            CommandMenu("FAQs") {
-                Button("New FAQ") {
-                    appState.newFAQ.toggle()
-                }
-                .keyboardShortcut("n", modifiers: .command)
-                // more menu items go here
-                .disabled(appState.importIsDisabled)
-                Button("Import JSON") {
-                    appState.importFailed = false
-                    appState.askImport.toggle()
-                }
-                .disabled(appState.importIsDisabled)
-                Button("Export JSON") {
-                    appState.initiateExport = true
-                }
-                .disabled(appState.exportIsDisabled)
-            }
+            Menus()
         }
+        .environment(appState)
     }
     
     init() {

@@ -25,39 +25,7 @@ struct AppFAQsListView: View {
         if appState.appCount > 0 {
             if appState.application != nil {
                 VStack {
-                    // MARK: - Top action buttons
-                    HStack {
-                        Spacer()
-                        if appState.application != nil  {
- 
-                            Button("New FAQ", systemImage: "plus.circle.fill") {
-                                appState.newFAQ.toggle()
-                            }
-                        }
-                    }
-                    .alert("Import JSON", isPresented: Bindable(appState).askImport) {
-                        Button("Cancel", role: .cancel) {
-                            
-                        }
-                        Button("Append") {
-                            initiateImport()
-                        }
-                        Button("Replace") {
-                            initiateImport(removeAll: true)
-                        }
-                    } message: {
-                        Text("Import FAQs from an existing JSON File.")
-                    }
-                    .alert("Import Failed", isPresented: Bindable(appState).importFailed, actions: {
-                        
-                    }, message: {
-                        Text("Could not decode that JSON file.  It must be in the wrong format.")
-                    })
-                    // MARK: - Appliction Selected Content
-                    // MARK: FAQs > 0
-                    
                     if let application, !application.faqs.isEmpty {
-                        Text("Selected")
                         if levels.count > 0 {
                             Picker("Select Level", selection: $selectedLevel) {
                                 EmptyView().tag(nil as Int?)
@@ -72,7 +40,7 @@ struct AppFAQsListView: View {
                                 HStack  {
                                     Image(systemName: faq.qImage)
                                     Text(faq.question)
-                                    Text("\(faq.sortOrder)")
+//                                    Text("\(faq.sortOrder)")
                                 }.tag(faq)
                             }
                             .onMove { from, to in
@@ -88,6 +56,24 @@ struct AppFAQsListView: View {
                     Spacer()
                 }
                 .padding()
+                .alert("Import JSON", isPresented: Bindable(appState).askImport) {
+                    Button("Cancel", role: .cancel) {
+                        
+                    }
+                    Button("Append") {
+                        initiateImport()
+                    }
+                    Button("Replace") {
+                        initiateImport(removeAll: true)
+                    }
+                } message: {
+                    Text("Import FAQs from an existing JSON File.")
+                }
+                .alert("Import Failed", isPresented: Bindable(appState).importFailed, actions: {
+                    
+                }, message: {
+                    Text("Could not decode that JSON file.  It must be in the wrong format.")
+                })
                 .sheet(isPresented: Bindable(appState).newFAQ, onDismiss: {
                     // Update
                     updateLevels()
@@ -117,6 +103,16 @@ struct AppFAQsListView: View {
             Image(.mac128)
         }
     }
+        .toolbar {
+            ToolbarItem {
+                if appState.application != nil  {
+
+                    Button("New FAQ", systemImage: "plus") {
+                        appState.newFAQ.toggle()
+                    }
+                }
+            }
+        }
         .onChange(of: application) {
             updateLevels()
             sortBySelectedLevel()

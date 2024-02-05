@@ -8,7 +8,7 @@
 // Follow me on LinkedIn: https://linkedin.com/in/StewartLynch
 // Subscribe on YouTube: https://youTube.com/@StewartLynch
 // Buy me a ko-fi:  https://ko-fi.com/StewartLynch
-
+#warning("Add Helpp to toolbar items and add more menu options corresonding to buttons like delete")
 
 import SwiftUI
 import SwiftData
@@ -18,7 +18,6 @@ struct FAQView: View {
     @State var model: FAQFormModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    
     var body: some View {
         Group {
             if appState.appCount == 0 ||
@@ -74,15 +73,15 @@ struct FAQView: View {
                             if !model.isNew {
                                 HStack {
                                     Spacer()
-                                    Button("Delete", systemImage: "trash", role: .destructive) {
-                                        if let faq = appState.fAQ, let application = appState.application {
-                                            appState.fAQ = nil
-                                            if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
-                                                application.faqs.remove(at: index)
-                                            }
-                                            appState.needsListRefresh = true
-                                        }
-                                    }
+//                                    Button("Delete", systemImage: "trash", role: .destructive) {
+//                                        if let faq = appState.fAQ, let application = appState.application {
+//                                            appState.fAQ = nil
+//                                            if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
+//                                                application.faqs.remove(at: index)
+//                                            }
+//                                            appState.needsListRefresh = true
+//                                        }
+//                                    }
                                     
                                     if changed {
                                         Button("Update") {
@@ -110,8 +109,18 @@ struct FAQView: View {
                     }
                     .frame(width: 500)
                     .toolbar {
-                        ToolbarItem {
-                            Spacer()
+                        if !model.isNew {
+                            ToolbarItem {
+                                Button("Delete", systemImage: "trash", role: .destructive) {
+                                    if let faq = appState.fAQ, let application = appState.application {
+                                        appState.fAQ = nil
+                                        if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
+                                            application.faqs.remove(at: index)
+                                        }
+                                        appState.needsListRefresh = true
+                                    }
+                                }
+                            }
                         }
                         if model.isNew {
                             ToolbarItem(placement: .cancellationAction) {

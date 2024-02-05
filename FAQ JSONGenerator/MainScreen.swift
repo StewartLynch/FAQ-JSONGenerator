@@ -14,6 +14,7 @@ import SwiftUI
 import SwiftData
 
 struct MainScreen: View {
+    @AppStorage("displayMode") var displayMode = DisplayMode.auto
     @Environment(AppState.self) var appState
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     var body: some View {
@@ -25,6 +26,12 @@ struct MainScreen: View {
                 .navigationSplitViewColumnWidth(350)
         } detail: {
             FAQView(model: FAQFormModel())
+        }
+        .onAppear {
+          DisplayMode.changeDisplayMode(to: displayMode)
+        }
+        .onChange(of: displayMode) { _, newValue in
+          DisplayMode.changeDisplayMode(to: newValue)
         }
         .navigationSplitViewStyle(.balanced)
         .frame(
