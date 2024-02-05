@@ -32,11 +32,9 @@ struct ApplicationListView: View {
             }
         }
         .onAppear {
-            print("Appear")
             router.appCount = applications.count
         }
         .onChange(of: applications) {
-            print("Changed")
             router.appCount = applications.count
         }
         .sheet(item: $appFormType) { $0 }

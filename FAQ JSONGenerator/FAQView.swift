@@ -13,7 +13,7 @@
 import SwiftUI
 import SwiftData
 
-struct FAQUpdateView: View {
+struct FAQView: View {
     @Environment(Router.self) var router
     @State var model: FAQFormModel
     @Environment(\.dismiss) private var dismiss
@@ -176,6 +176,6 @@ struct FAQUpdateView: View {
     let faq = application.faqs[0]
     let router = Router()
     router.fAQ = faq
-    return FAQUpdateView(model: FAQFormModel())
+    return FAQView(model: FAQFormModel())
         .environment(router)
 }
