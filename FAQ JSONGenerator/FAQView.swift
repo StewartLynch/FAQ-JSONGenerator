@@ -98,20 +98,6 @@ struct FAQView: View {
                     }
                     .frame(width: 500)
                     .toolbar {
-                        if !model.isNew {
-                            ToolbarItem {
-                                Button("Delete", systemImage: "trash", role: .destructive) {
-                                    if let faq = appState.fAQ, let application = appState.application {
-                                        appState.fAQ = nil
-                                        if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
-                                            application.faqs.remove(at: index)
-                                        }
-                                        appState.needsListRefresh = true
-                                    }
-                                }
-                                .help("Delete FAQ from this application")
-                            }
-                        }
                         if model.isNew {
                             ToolbarItem(placement: .cancellationAction) {
                                 Button("Cancel") {

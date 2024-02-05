@@ -24,6 +24,7 @@ class AppState {
     var initiateExport = false
     
     var newFAQ = false
+    var deleteFAQ = false
     var appFormType: AppFormType?
     
     // Menu

@@ -106,11 +106,18 @@ struct AppFAQsListView: View {
         .toolbar {
             ToolbarItem {
                 if appState.application != nil  {
-
                     Button("New FAQ", systemImage: "plus") {
                         appState.newFAQ.toggle()
                     }
                     .help("Add a new FAQ")
+                }
+            }
+            if !appState.newFAQ && appState.fAQ != nil {
+                ToolbarItem {
+                    Button("Delete", systemImage: "trash", role: .destructive) {
+                        appState.deleteFAQ.toggle()
+                    }
+                    .help("Delete FAQ from this application")
                 }
             }
         }
@@ -132,6 +139,18 @@ struct AppFAQsListView: View {
                 export()
             }
             appState.initiateExport = false
+        }
+        .onChange(of: appState.deleteFAQ) {
+            if appState.deleteFAQ {
+                if let faq = appState.fAQ, let application = appState.application {
+                    appState.fAQ = nil
+                    if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
+                        application.faqs.remove(at: index)
+                    }
+                    appState.needsListRefresh = true
+                }
+            }
+            appState.deleteFAQ = false
         }
     }
 

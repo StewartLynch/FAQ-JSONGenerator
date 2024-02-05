@@ -40,6 +40,12 @@ struct Menus: Commands {
                 appState.initiateExport = true
             }
             .disabled(appState.exportIsDisabled)
+            Button("Delete FAQ") {
+                appState.deleteFAQ.toggle()
+            }
+            .keyboardShortcut("d", modifiers: .command)
+            // more menu items go here
+            .disabled(appState.fAQ == nil)
         }
         CommandMenu("Display") {
             Picker("Appearance", selection: $displayMode) {
