@@ -44,7 +44,7 @@ struct ApplicationListView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
-                .help("Create new App FAQ JSON")
+                .help("Add a new application")
             }
             if appState.application != nil {
                 ToolbarItem {
@@ -55,7 +55,7 @@ struct ApplicationListView: View {
                     } label: {
                         Image(systemName: "pencil")
                     }
-                    .help("Edit App Name")
+                    .help("Edit Application Information")
                 }
                 ToolbarItem {
                     Button {
@@ -67,7 +67,7 @@ struct ApplicationListView: View {
                     } label: {
                         Image(systemName: "trash")
                     }
-                    .help("Delete App")
+                    .help("Delete Appilcation")
                 }
             }
         }

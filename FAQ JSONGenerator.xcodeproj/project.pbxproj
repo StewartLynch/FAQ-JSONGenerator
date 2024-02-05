@@ -115,10 +115,10 @@
 		BB57A23D2B6EED730031F923 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				BB14AC872B6C4A650055A23C /* ApplicationListView.swift */,
 				BB57A23E2B6EEDA00031F923 /* AppFormModel.swift */,
 				BB89DED42B7059D3000D930F /* AppFormView.swift */,
 				BB89DED62B705A99000D930F /* AppFormType.swift */,
-				BB14AC872B6C4A650055A23C /* ApplicationListView.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";

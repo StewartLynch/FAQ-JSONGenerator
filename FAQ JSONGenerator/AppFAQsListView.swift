@@ -110,6 +110,7 @@ struct AppFAQsListView: View {
                     Button("New FAQ", systemImage: "plus") {
                         appState.newFAQ.toggle()
                     }
+                    .help("Add a new FAQ")
                 }
             }
         }
