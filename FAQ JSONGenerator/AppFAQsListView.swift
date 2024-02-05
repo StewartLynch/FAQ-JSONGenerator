@@ -14,7 +14,7 @@ import SwiftUI
 import SwiftData
 
 struct AppFAQsListView: View {
-    @Environment(Router.self) var router
+    @Environment(AppState.self) var appState
     @Environment(\.modelContext) private var modelContext
     let application: Application?
     @State private var sortedFAQs = [FAQ]()
@@ -26,13 +26,13 @@ struct AppFAQsListView: View {
     @State private var importFailed = false
     var body: some View {
         Group {
-        if router.appCount > 0 {
-            if router.application != nil {
+        if appState.appCount > 0 {
+            if appState.application != nil {
                 VStack {
                     // MARK: - Top action buttons
                     HStack {
                         Spacer()
-                        if let application = router.application  {
+                        if let application = appState.application  {
                             // MARK: Import button
                             Button("Import JSON", systemImage: "arrow.up") {
                                 importFailed = false
@@ -46,7 +46,7 @@ struct AppFAQsListView: View {
                                     switch InOutService.importFAQs(application: application) {
                                     case .success(let faqs):
                                         completeImport(faqs: faqs)
-                                        router.needsListRefresh = true
+                                        appState.needsListRefresh = true
                                     case .failure(let error):
                                         if error != .cancel {
                                             importFailed = true
@@ -118,7 +118,7 @@ struct AppFAQsListView: View {
                             }
                             .frame(width: 200)
                         }
-                        List(selection: Bindable(router).fAQ) {
+                        List(selection: Bindable(appState).fAQ) {
                             ForEach(sortedFAQs){ faq in
                                 HStack  {
                                     Image(systemName: faq.qImage)
@@ -145,7 +145,7 @@ struct AppFAQsListView: View {
                     sortBySelectedLevel()
                     
                 }) {
-                    if let application = router.application {
+                    if let application = appState.application {
                         FAQView(model: FAQFormModel(application: application))
                     }
                 }
@@ -156,10 +156,10 @@ struct AppFAQsListView: View {
                 .onChange(of: selectedLevel) {
                     sortBySelectedLevel()
                 }
-                .onChange(of: router.needsListRefresh) {
+                .onChange(of: appState.needsListRefresh) {
                     updateLevels()
                     sortBySelectedLevel()
-                    router.needsListRefresh = false
+                    appState.needsListRefresh = false
                 }
             } else {
                 ContentUnavailableView("Select Application", systemImage: "hand.point.left.fill")
@@ -175,10 +175,10 @@ struct AppFAQsListView: View {
         .onChange(of: selectedLevel) {
             sortBySelectedLevel()
         }
-        .onChange(of: router.needsListRefresh) {
+        .onChange(of: appState.needsListRefresh) {
             updateLevels()
             sortBySelectedLevel()
-            router.needsListRefresh = false
+            appState.needsListRefresh = false
         }
     }
 
@@ -188,14 +188,14 @@ struct AppFAQsListView: View {
         } else {
             sortedFAQs = []
         }
-        router.fAQ = nil
+        appState.fAQ = nil
         
     }
     
     func updateLevels() {
         if let application, !application.faqs.isEmpty {
             levels = Array(Set(application.faqs.map { $0.level })).sorted(by: <)
-            if router.needsListRefresh {
+            if appState.needsListRefresh {
                 // Update sort orders
                 levels.forEach { level in
                     sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == level}
@@ -248,10 +248,10 @@ struct AppFAQsListView: View {
                 }
                 try? modelContext.save()
             }
-            router.needsListRefresh = true
+            appState.needsListRefresh = true
             updateLevels()
             sortBySelectedLevel()
-            router.needsListRefresh = false
+            appState.needsListRefresh = false
         }
     }
     
@@ -263,6 +263,6 @@ struct AppFAQsListView: View {
     let application = try! container.mainContext.fetch(fetchDescriptor)[0]
     
     return AppFAQsListView(application: application)
-        .environment(Router())
+        .environment(AppState())
     //        .modelContainer(Application.preview)
 }

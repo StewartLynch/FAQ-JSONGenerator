@@ -15,13 +15,23 @@ import SwiftData
 
 @main
 struct FAQ_JSONGeneratorApp: App {
-    @State private var router = Router()
+    @State private var appState = AppState()
     var body: some Scene {
         WindowGroup {
             MainScreen()
         }
         .modelContainer(for: Application.self)
-        .environment(router)
+        .environment(appState)
+        .commands {
+            SidebarCommands()
+            ToolbarCommands()
+            CommandGroup(replacing: .newItem) {
+                Menu("Import/Export") {
+                    Button("Import") {}
+                    Button("Export") {}
+                }
+            }
+        }
     }
     
     init() {

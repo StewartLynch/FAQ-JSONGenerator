@@ -14,14 +14,14 @@ import SwiftUI
 import SwiftData
 
 struct MainScreen: View {
-    @Environment(Router.self) var router
+    @Environment(AppState.self) var appState
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             ApplicationListView()
                 .navigationSplitViewColumnWidth(250)
         } content: {
-            AppFAQsListView(application: router.application)
+            AppFAQsListView(application: appState.application)
                 .navigationSplitViewColumnWidth(350)
         } detail: {
             FAQView(model: FAQFormModel())
@@ -40,5 +40,5 @@ struct MainScreen: View {
 #Preview {
     MainScreen()
         .modelContainer(Application.preview)
-        .environment(Router())
+        .environment(AppState())
 }

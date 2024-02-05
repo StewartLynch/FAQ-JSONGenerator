@@ -14,7 +14,7 @@ import SwiftUI
 import SwiftData
 
 struct ApplicationListView: View {
-    @Environment(Router.self) var router
+    @Environment(AppState.self) var appState
     @Environment(\.modelContext) var modelContext
     @Query(sort: \Application.name) var applications: [Application]
     @State private var appName = ""
@@ -22,7 +22,7 @@ struct ApplicationListView: View {
     var body: some View {
         Group {
             if !applications.isEmpty {
-                List(applications, selection: Bindable(router).application) { application in
+                List(applications, selection: Bindable(appState).application) { application in
                     Text(application.name).tag(application)
                 }
             } else {
@@ -32,10 +32,10 @@ struct ApplicationListView: View {
             }
         }
         .onAppear {
-            router.appCount = applications.count
+            appState.appCount = applications.count
         }
         .onChange(of: applications) {
-            router.appCount = applications.count
+            appState.appCount = applications.count
         }
         .sheet(item: $appFormType) { $0 }
         .toolbar {
@@ -47,10 +47,10 @@ struct ApplicationListView: View {
                 }
                 .help("Create new App FAQ JSON")
             }
-            if router.application != nil {
+            if appState.application != nil {
                 ToolbarItem {
                     Button {
-                        if let application = router.application {
+                        if let application = appState.application {
                             appFormType = .update(application)
                         }
                     } label: {
@@ -60,9 +60,9 @@ struct ApplicationListView: View {
                 }
                 ToolbarItem {
                     Button {
-                        if let application = router.application {
+                        if let application = appState.application {
                             modelContext.delete(application)
-                            router.application = nil
+                            appState.application = nil
                         }
                         
                     } label: {
@@ -78,6 +78,6 @@ struct ApplicationListView: View {
 #Preview {
     ApplicationListView()
         .modelContainer(Application.preview)
-        .environment(Router())
+        .environment(AppState())
     
 }

@@ -13,7 +13,7 @@
 import SwiftUI
 
 @Observable
-class Router {
+class AppState {
     var application: Application?
     var fAQ: FAQ?
     var needsListRefresh = false
