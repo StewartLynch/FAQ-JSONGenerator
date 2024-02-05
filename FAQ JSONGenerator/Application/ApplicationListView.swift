@@ -26,7 +26,7 @@ struct ApplicationListView: View {
                 }
             } else {
                 ContentUnavailableView {
-                    Text("Tap on the \(Image(systemName: "plus")) button above to add your first application.")
+                    Text("Add your first appliction.")
                 }
             }
         }
@@ -35,6 +35,14 @@ struct ApplicationListView: View {
         }
         .onChange(of: applications) {
             appState.appCount = applications.count
+        }
+        .onChange(of: appState.deleteApplication) {
+            if appState.deleteApplication {
+                if let application = appState.application {
+                    modelContext.delete(application)
+                    appState.application = nil
+                }
+            }
         }
         .sheet(item: Bindable(appState).appFormType) { $0 }
         .toolbar {
@@ -59,10 +67,7 @@ struct ApplicationListView: View {
                 }
                 ToolbarItem {
                     Button {
-                        if let application = appState.application {
-                            modelContext.delete(application)
-                            appState.application = nil
-                        }
+                        appState.deleteApplication = true
                         
                     } label: {
                         Image(systemName: "trash")

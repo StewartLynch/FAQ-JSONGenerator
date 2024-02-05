@@ -23,6 +23,20 @@ struct Menus: Commands {
                 appState.appFormType = .new
             }
             .keyboardShortcut("n", modifiers: [.shift, .command])
+            Button("Delete Application...") {
+                appState.deleteApplication.toggle()
+            }
+            .keyboardShortcut("d", modifiers: [.shift, .command])
+            .disabled(appState.application == nil)
+        }
+        CommandGroup(replacing: .textEditing) {
+            Button("Edit Application") {
+                if let application = appState.application {
+                    appState.appFormType = .update(application)
+                }
+            }
+            .keyboardShortcut("e", modifiers: [.shift, .command])
+            .disabled(appState.application == nil)
         }
         CommandMenu("FAQs") {
             Button("New FAQ") {

@@ -18,13 +18,16 @@ class AppState {
     var fAQ: FAQ?
     var needsListRefresh = false
     var appCount = 0
+    
     var askImport = false
+    var initiateExport = false
     var importFailed = false
     
-    var initiateExport = false
+    var deleteApplication = false
     
     var newFAQ = false
     var deleteFAQ = false
+    
     var appFormType: AppFormType?
     
     // Menu

@@ -121,6 +121,7 @@ struct FAQView: View {
                                         newFAQ.link.title = model.linkTitle
                                         newFAQ.link.url = model.linkURL
                                     }
+                                    appState.needsListRefresh = true
                                     dismiss()
                                 }
                             }

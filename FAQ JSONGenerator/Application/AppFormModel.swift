@@ -44,27 +44,3 @@ class AppFormModel {
     init() {
     }
 }
-
-
-//enum AppFormType: Identifiable, View {
-//    case new
-//    case update(Application)
-//    var id: String {
-//        switch self {
-//        case .new:
-//            "new"
-//        case .update:
-//            "update"
-//        }
-//    }
-//    
-//    var body: some View {
-//        switch self {
-//        case .new:
-//            AppFormView(model: AppFormModel())
-//        case .update(let application):
-//            AppFormView(model: AppFormModel(application: application))
-//        }
-//    }
-//    
-//}
