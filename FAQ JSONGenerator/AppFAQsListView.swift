@@ -20,10 +20,6 @@ struct AppFAQsListView: View {
     @State private var sortedFAQs = [FAQ]()
     @State private var selectedLevel: Int? = nil
     @State private var levels: [Int] = []
-    @State private var newFAQ = false
-    @State private var importWarning = false
-    @State private var removeAll = false
-    @State private var importFailed = false
     var body: some View {
         Group {
         if appState.appCount > 0 {
@@ -32,74 +28,27 @@ struct AppFAQsListView: View {
                     // MARK: - Top action buttons
                     HStack {
                         Spacer()
-                        if let application = appState.application  {
-                            // MARK: Import button
-                            Button("Import JSON", systemImage: "arrow.up") {
-                                importFailed = false
-                                importWarning.toggle()
-                            }
-                            .alert("Import JSON", isPresented: $importWarning) {
-                                Button("Cancel", role: .cancel) {
-                                    
-                                }
-                                Button("Append") {
-                                    switch InOutService.importFAQs(application: application) {
-                                    case .success(let faqs):
-                                        completeImport(faqs: faqs)
-                                        appState.needsListRefresh = true
-                                    case .failure(let error):
-                                        if error != .cancel {
-                                            importFailed = true
-                                        }
-                                    }
-                                }
-                                Button("Replace") {
-                                    removeAll = true
-                                    switch InOutService.importFAQs(application: application) {
-                                    case .success(let faqs):
-                                        application.faqs.removeAll()
-                                        completeImport(faqs: faqs)
-                                    case .failure(let error):
-                                        if error != .cancel {
-                                            importFailed = true
-                                        }
-                                    }
-                                    removeAll = false
-                                }
-                            } message: {
-                                Text("Import FAQs from an existing JSON File.")
-                            }
-                            
-                            // MARK: Export button
-                            if !application.faqs.isEmpty {
-                                // We have some faqs so show the export button
-                                Button("Export") {
-                                    if let jsonData = InOutService.exportJSONData(application: application) {
-                                        let savePanel = NSSavePanel()
-                                        let suggestedFileName = application.name.replacingOccurrences(of: " ", with: "")
-                                        savePanel.nameFieldStringValue = suggestedFileName
-                                        savePanel.allowedContentTypes = [.json]
-                                        
-                                        savePanel.begin { result in
-                                            if result == .OK, let url = savePanel.url {
-                                                do {
-                                                    try jsonData.write(to: url)
-                                                    print("JSON exported successfully.")
-                                                } catch {
-                                                    print("Error writing JSON data: \(error)")
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            // MARK: New button
+                        if appState.application != nil  {
+ 
                             Button("New FAQ", systemImage: "plus.circle.fill") {
-                                newFAQ.toggle()
+                                appState.newFAQ.toggle()
                             }
                         }
                     }
-                    .alert("Import Failed", isPresented: $importFailed, actions: {
+                    .alert("Import JSON", isPresented: Bindable(appState).askImport) {
+                        Button("Cancel", role: .cancel) {
+                            
+                        }
+                        Button("Append") {
+                            initiateImport()
+                        }
+                        Button("Replace") {
+                            initiateImport(removeAll: true)
+                        }
+                    } message: {
+                        Text("Import FAQs from an existing JSON File.")
+                    }
+                    .alert("Import Failed", isPresented: Bindable(appState).importFailed, actions: {
                         
                     }, message: {
                         Text("Could not decode that JSON file.  It must be in the wrong format.")
@@ -139,7 +88,7 @@ struct AppFAQsListView: View {
                     Spacer()
                 }
                 .padding()
-                .sheet(isPresented: $newFAQ, onDismiss: {
+                .sheet(isPresented: Bindable(appState).newFAQ, onDismiss: {
                     // Update
                     updateLevels()
                     sortBySelectedLevel()
@@ -180,6 +129,13 @@ struct AppFAQsListView: View {
             sortBySelectedLevel()
             appState.needsListRefresh = false
         }
+        
+        .onChange(of: appState.initiateExport) {
+            if appState.initiateExport {
+                export()
+            }
+            appState.initiateExport = false
+        }
     }
 
     func sortBySelectedLevel() {
@@ -219,6 +175,22 @@ struct AppFAQsListView: View {
         }
     }
     
+    func initiateImport(removeAll: Bool = false) {
+        if let application = appState.application {
+            switch InOutService.importFAQs(application: application) {
+            case .success(let faqs):
+                if removeAll {
+                    application.faqs.removeAll()
+                }
+                completeImport(faqs: faqs)
+            case .failure(let error):
+                if error != .cancel {
+                    appState.importFailed = true
+                }
+            }
+        }
+    }
+    
     func completeImport(faqs: [ExportJSON.FAQ]) {
         if let application {
             faqs.forEach { faq in
@@ -252,6 +224,26 @@ struct AppFAQsListView: View {
             updateLevels()
             sortBySelectedLevel()
             appState.needsListRefresh = false
+        }
+    }
+    
+    func export() {
+        if let application, let jsonData = InOutService.exportJSONData(application: application) {
+            let savePanel = NSSavePanel()
+            let suggestedFileName = application.name.replacingOccurrences(of: " ", with: "")
+            savePanel.nameFieldStringValue = suggestedFileName
+            savePanel.allowedContentTypes = [.json]
+            
+            savePanel.begin { result in
+                if result == .OK, let url = savePanel.url {
+                    do {
+                        try jsonData.write(to: url)
+                        print("JSON exported successfully.")
+                    } catch {
+                        print("Error writing JSON data: \(error)")
+                    }
+                }
+            }
         }
     }
     

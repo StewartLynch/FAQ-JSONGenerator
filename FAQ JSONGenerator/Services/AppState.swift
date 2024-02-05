@@ -18,6 +18,23 @@ class AppState {
     var fAQ: FAQ?
     var needsListRefresh = false
     var appCount = 0
+    var askImport = false
+    var importFailed = false
+    
+    var initiateExport = false
+    
+    var newFAQ = false
+    var appFormType: AppFormType?
+    
+    // Menu
+    var importIsDisabled: Bool {
+       application == nil
+    }
+    
+    var exportIsDisabled: Bool {
+        application == nil ||
+        application != nil && application!.faqs.isEmpty
+    }
     
     func reset() {
         application = nil

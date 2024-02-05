@@ -18,7 +18,6 @@ struct ApplicationListView: View {
     @Environment(\.modelContext) var modelContext
     @Query(sort: \Application.name) var applications: [Application]
     @State private var appName = ""
-    @State private var appFormType: AppFormType?
     var body: some View {
         Group {
             if !applications.isEmpty {
@@ -37,11 +36,11 @@ struct ApplicationListView: View {
         .onChange(of: applications) {
             appState.appCount = applications.count
         }
-        .sheet(item: $appFormType) { $0 }
+        .sheet(item: Bindable(appState).appFormType) { $0 }
         .toolbar {
             ToolbarItem {
                 Button {
-                    appFormType = .new
+                    appState.appFormType = .new
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -51,7 +50,7 @@ struct ApplicationListView: View {
                 ToolbarItem {
                     Button {
                         if let application = appState.application {
-                            appFormType = .update(application)
+                            appState.appFormType = .update(application)
                         }
                     } label: {
                         Image(systemName: "pencil")

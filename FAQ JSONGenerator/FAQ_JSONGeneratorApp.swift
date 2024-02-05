@@ -26,10 +26,27 @@ struct FAQ_JSONGeneratorApp: App {
             SidebarCommands()
             ToolbarCommands()
             CommandGroup(replacing: .newItem) {
-                Menu("Import/Export") {
-                    Button("Import") {}
-                    Button("Export") {}
+                Button("Add Application") {
+                    appState.appFormType = .new
                 }
+                .keyboardShortcut("n", modifiers: [.shift, .command])
+            }
+            CommandMenu("FAQs") {
+                Button("New FAQ") {
+                    appState.newFAQ.toggle()
+                }
+                .keyboardShortcut("n", modifiers: .command)
+                // more menu items go here
+                .disabled(appState.importIsDisabled)
+                Button("Import JSON") {
+                    appState.importFailed = false
+                    appState.askImport.toggle()
+                }
+                .disabled(appState.importIsDisabled)
+                Button("Export JSON") {
+                    appState.initiateExport = true
+                }
+                .disabled(appState.exportIsDisabled)
             }
         }
     }
