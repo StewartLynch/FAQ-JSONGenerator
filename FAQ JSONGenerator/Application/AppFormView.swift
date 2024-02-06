@@ -22,7 +22,7 @@ struct AppFormView: View {
             Form {
                 TextField("App Name", text: $model.name)
                 TextField("Base URL", text: $model.baseURL)
-                TextField("Video Folder", text: $model.videoFolder)
+                TextField("Media Folder", text: $model.mediaFolder)
                 TextField("HTML Folder", text: $model.htmlFolder)
             }
             .padding()
@@ -33,13 +33,13 @@ struct AppFormView: View {
                         if model.updating {
                             model.application?.name = model.name
                             model.application?.baseURL = model.baseURLPath
-                            model.application?.videoFolder = model.videoFolder
-                            model.application?.htmlFolder = model.videoFolder
+                            model.application?.videoFolder = model.mediaFolder
+                            model.application?.htmlFolder = model.htmlFolder
                         } else {
                             let newApp = Application(
                                 name: model.name,
                                 baseURL: model.baseURLPath,
-                                videoFolder: model.videoFolder,
+                                videoFolder: model.mediaFolder,
                                 htmlFolder: model.htmlFolder
                             )
                             modelContext.insert(newApp)

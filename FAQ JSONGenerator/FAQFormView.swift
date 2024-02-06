@@ -59,6 +59,7 @@ struct FAQFormView: View {
                                 }
                                 let text = switch model.linkType {
                                 case .none: ""
+                                case .image: "Image file name"
                                 case .video: "Video file name"
                                 case .weblink: "html file/path name relative to application html folder"
                                 case .external: "URL"

@@ -17,7 +17,7 @@ import SwiftData
 class AppFormModel {
     var name: String = ""
     var baseURL: String = ""
-    var videoFolder: String = "videos"
+    var mediaFolder: String = "media"
     var htmlFolder: String = "html"
     var baseURLPath: String {
         baseURL.last == "/" ? baseURL : baseURL + "/"
@@ -30,14 +30,14 @@ class AppFormModel {
     }
     
     var disabled: Bool {
-        name.isEmpty || baseURL.isEmpty || videoFolder.isEmpty || htmlFolder.isEmpty
+        name.isEmpty || baseURL.isEmpty || mediaFolder.isEmpty || htmlFolder.isEmpty
     }
     
     init(application: Application) {
         self.application = application
         self.name = application.name
         self.baseURL = application.baseURL
-        self.videoFolder = application.videoFolder
+        self.mediaFolder = application.videoFolder
         self.htmlFolder = application.htmlFolder
     }
     

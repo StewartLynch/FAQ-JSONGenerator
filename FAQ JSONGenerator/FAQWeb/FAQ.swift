@@ -20,6 +20,7 @@ struct FAQ: Codable, Identifiable, Hashable {
 
     enum FAQLinkType: String, Codable {
         case none
+        case image = "Local Image"
         case video = "Local Video"
         case weblink = "Local Link"
         case external = "External Link"
@@ -38,6 +39,8 @@ struct FAQ: Codable, Identifiable, Hashable {
             switch linkENum {
             case .none:
                 return "quote.opening"
+            case .image:
+                return "photo.fill"
             case .video:
                return  "video.fill"
             case .weblink:

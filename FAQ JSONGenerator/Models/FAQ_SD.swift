@@ -17,9 +17,9 @@ import SwiftData
 class Application {
     var name: String
     var baseURL: String
-    var videoFolder: String = "videos"
+    var videoFolder: String = "media"
     var htmlFolder: String = "html"
-    init(name: String, baseURL: String, videoFolder: String = "videos", htmlFolder: String = "html") {
+    init(name: String, baseURL: String, videoFolder: String = "media", htmlFolder: String = "html") {
         self.name = name
         self.baseURL = baseURL
         self.videoFolder = videoFolder
@@ -83,6 +83,8 @@ class FAQ_SD {
     var qImage: String {
         let  linkEnum = LinkType(rawValue: linkType) ?? .none
             switch linkEnum {
+            case .image:
+                return "photo.fill"
             case .video:
                 return "video.fill"
             case .weblink:
@@ -117,6 +119,7 @@ class Link_SD {
 
 enum LinkType: String, Codable, Identifiable, CaseIterable {
     case none
+    case image = "Local Image"
     case video = "Local Video"
     case weblink = "Local Link"
     case external = "External Link"

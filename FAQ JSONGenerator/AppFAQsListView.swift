@@ -224,7 +224,7 @@ struct AppFAQsListView: View {
                     switch linkType {
                     case .none:
                         break
-                    case .video:
+                    case .video, .image:
                         newFAQ.link.title = link.title
                         newFAQ.link.url = link.url.components(separatedBy: "/").last ?? ""
                     case .weblink:
