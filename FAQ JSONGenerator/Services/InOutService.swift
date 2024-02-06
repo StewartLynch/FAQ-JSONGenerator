@@ -48,11 +48,6 @@ enum InOutService {
         encoder.outputFormatting = .prettyPrinted
         do {
             let jsonData = try encoder.encode(exportArray)
-//            if let jsonString = String(data: jsonData, encoding: .utf8) {
-//                print(jsonString)
-//            } else {
-//                print( "")
-//            }
             return jsonData
         } catch {
             print("Error encoding ExportJSON: \(error)")

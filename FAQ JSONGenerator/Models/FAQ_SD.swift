@@ -26,7 +26,7 @@ class Application {
         self.htmlFolder = htmlFolder
     }
     @Relationship(deleteRule: .cascade)
-    var faqs: [FAQ] = []
+    var faqs: [FAQ_SD] = []
 }
 
 extension Application {
@@ -39,19 +39,19 @@ extension Application {
             )
         )
         let apps = [Application(name: "TripMapper", baseURL: ""), Application(name: "My Workouts", baseURL: "")]
-        let links: [LinkType : Link] = [
-            .video : Link(title: "Watch Video", url: "https://www.createchsol.com"),
-            .weblink : Link(title: "More Information", url: "https://www.createchsol.com")
+        let links: [LinkType : Link_SD] = [
+            .video : Link_SD(title: "Watch Video", url: "https://www.createchsol.com"),
+            .weblink : Link_SD(title: "More Information", url: "https://www.createchsol.com")
         ]
         
-        var faqs: [FAQ] {
+        var faqs: [FAQ_SD] {
             [
-                FAQ(level: 1, sortOrder: 1, question: "Q 1-1", answer: "Level 1 Answer 1"),
-                FAQ(level: 1, sortOrder: 2, question: "Q 1-2", answer: "Level 1 Answer 2",linkType: .video, link: links[.video]!),
-                FAQ(level: 1, sortOrder: 3, question: "Q 1-3", answer: "Level 1 Answer 3",linkType: .weblink, link: links[.weblink]!),
-                FAQ(level: 2, sortOrder: 1, question: "Q 2-1", answer: "Level 2 Answer 1"),
-                FAQ(level: 2, sortOrder: 2, question: "Q 2-2", answer: "Level 2 Answer 2",linkType: .video, link: links[.video]!),
-                FAQ(level: 2, sortOrder: 3, question: "Q 2-3", answer: "Level 2 Answer 3",linkType: .weblink, link: links[.weblink]!),
+                FAQ_SD(level: 1, sortOrder: 1, question: "Q 1-1", answer: "Level 1 Answer 1"),
+                FAQ_SD(level: 1, sortOrder: 2, question: "Q 1-2", answer: "Level 1 Answer 2",linkType: .video, link: links[.video]!),
+                FAQ_SD(level: 1, sortOrder: 3, question: "Q 1-3", answer: "Level 1 Answer 3",linkType: .weblink, link: links[.weblink]!),
+                FAQ_SD(level: 2, sortOrder: 1, question: "Q 2-1", answer: "Level 2 Answer 1"),
+                FAQ_SD(level: 2, sortOrder: 2, question: "Q 2-2", answer: "Level 2 Answer 2",linkType: .video, link: links[.video]!),
+                FAQ_SD(level: 2, sortOrder: 3, question: "Q 2-3", answer: "Level 2 Answer 3",linkType: .weblink, link: links[.weblink]!),
             ]
         }
         
@@ -67,14 +67,14 @@ extension Application {
 }
 
 @Model
-class FAQ {
+class FAQ_SD {
     var level: Int
     var sortOrder: Int
     var question: String
     var answer: String
     var linkType: String
     @Relationship(deleteRule: .cascade)
-    var link: Link
+    var link: Link_SD
     
     var linkTypeEnum: LinkType {
         LinkType(rawValue: linkType) ?? .none
@@ -94,7 +94,7 @@ class FAQ {
             }
     }
         
-        init(level: Int, sortOrder: Int, question: String, answer: String, linkType: LinkType = .none, link: Link = Link()) {
+        init(level: Int, sortOrder: Int, question: String, answer: String, linkType: LinkType = .none, link: Link_SD = Link_SD()) {
             self.level = level
             self.sortOrder = sortOrder
             self.question = question
@@ -106,7 +106,7 @@ class FAQ {
 
 
 @Model
-class Link {
+class Link_SD {
     var title: String
     var url: String
     init(title: String = "", url: String = "") {

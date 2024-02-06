@@ -25,7 +25,7 @@ struct MainScreen: View {
             AppFAQsListView(application: appState.application)
                 .navigationSplitViewColumnWidth(350)
         } detail: {
-            FAQView(model: FAQFormModel())
+            FAQFormView(model: FAQFormModel())
         }
         .onAppear {
           DisplayMode.changeDisplayMode(to: displayMode)

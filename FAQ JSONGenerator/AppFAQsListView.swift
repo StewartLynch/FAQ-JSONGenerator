@@ -17,7 +17,7 @@ struct AppFAQsListView: View {
     @Environment(AppState.self) var appState
     @Environment(\.modelContext) private var modelContext
     let application: Application?
-    @State private var sortedFAQs = [FAQ]()
+    @State private var sortedFAQs = [FAQ_SD]()
     @State private var selectedLevel: Int? = nil
     @State private var levels: [Int] = []
     var body: some View {
@@ -81,7 +81,7 @@ struct AppFAQsListView: View {
                     
                 }) {
                     if let application = appState.application {
-                        FAQView(model: FAQFormModel(application: application))
+                        FAQFormView(model: FAQFormModel(application: application))
                     }
                 }
                 .onChange(of: application) {
@@ -211,7 +211,7 @@ struct AppFAQsListView: View {
         if let application {
             faqs.forEach { faq in
                 let linkType = LinkType(rawValue: faq.linkType) ?? .none
-                let newFAQ = FAQ(
+                let newFAQ = FAQ_SD(
                     level: faq.level,
                     sortOrder: faq.sortOrder,
                     question: faq.question,
@@ -231,6 +231,7 @@ struct AppFAQsListView: View {
                         newFAQ.link.title = link.title
                         newFAQ.link.url = link.url.components(separatedBy: "/").last ?? ""
                     case .external:
+                        newFAQ.link.title = link.title
                         newFAQ.link.url = link.url
                     }
                 }

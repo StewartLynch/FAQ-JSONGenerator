@@ -12,7 +12,7 @@
 import SwiftUI
 import SwiftData
 
-struct FAQView: View {
+struct FAQFormView: View {
     @Environment(AppState.self) var appState
     @State var model: FAQFormModel
     @Environment(\.dismiss) private var dismiss
@@ -106,7 +106,7 @@ struct FAQView: View {
                             }
                             ToolbarItem(placement: .confirmationAction) {
                                 Button("Add") {
-                                    let newFAQ = FAQ(
+                                    let newFAQ = FAQ_SD(
                                         level: model.level,
                                         sortOrder: (appState.application?.faqs.count ?? 0) + 1,
                                         question: model.question,
@@ -162,6 +162,6 @@ struct FAQView: View {
     let faq = application.faqs[0]
     let appState = AppState()
     appState.fAQ = faq
-    return FAQView(model: FAQFormModel())
+    return FAQFormView(model: FAQFormModel())
         .environment(appState)
 }

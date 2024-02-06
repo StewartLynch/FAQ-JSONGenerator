@@ -1,0 +1,46 @@
+//
+// Created for TripMapper
+// by  Stewart Lynch on 2024-01-31
+//
+// Follow me on Mastodon: @StewartLynch@iosdev.space
+// Follow me on Threads: @StewartLynch (https://www.threads.net)
+// Follow me on X: https://x.com/StewartLynch
+// Follow me on LinkedIn: https://linkedin.com/in/StewartLynch
+// Subscribe on YouTube: https://youTube.com/@StewartLynch
+// Buy me a ko-fi:  https://ko-fi.com/StewartLynch
+
+
+import SwiftUI
+import WebKit
+ 
+#if os(iOS)
+struct FAQWebView: UIViewRepresentable {
+    var url: URL
+ 
+    func makeUIView(context: Context) -> WKWebView {
+        let config = WKWebViewConfiguration()
+        config.allowsInlineMediaPlayback = true
+        let webView = WKWebView(frame: .zero, configuration: config)
+        return webView
+    }
+ 
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        webView.load(request)
+    }
+}
+#else
+struct FAQWebView: NSViewRepresentable {
+    func updateNSView(_ nsView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        nsView.load(request)
+    }
+    
+    var url: URL
+ 
+    func makeNSView(context: Context) -> WKWebView {
+        return WKWebView()
+    }
+
+}
+#endif

@@ -15,7 +15,7 @@ import SwiftUI
 @Observable
 class AppState {
     var application: Application?
-    var fAQ: FAQ?
+    var fAQ: FAQ_SD?
     var needsListRefresh = false
     var appCount = 0
     
@@ -29,7 +29,6 @@ class AppState {
     var deleteFAQ = false
     
     var appFormType: AppFormType?
-    
     // Menu
     var importIsDisabled: Bool {
        application == nil
