@@ -26,7 +26,7 @@ struct ApplicationListView: View {
                 }
             } else {
                 ContentUnavailableView {
-                    Text("Add your first appliction.")
+                    Text("Add your first application by either tapping on the \(Image(systemName: "plus")) button or choosing **New Appliction** from the **File** menu.")
                 }
             }
         }
@@ -42,6 +42,7 @@ struct ApplicationListView: View {
                     modelContext.delete(application)
                     appState.application = nil
                 }
+                appState.deleteApplication = false
             }
         }
         .sheet(item: Bindable(appState).appFormType) { $0 }

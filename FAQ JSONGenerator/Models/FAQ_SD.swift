@@ -17,12 +17,12 @@ import SwiftData
 class Application {
     var name: String
     var baseURL: String
-    var videoFolder: String = "media"
+    var mediaFolder: String = "media"
     var htmlFolder: String = "html"
     init(name: String, baseURL: String, videoFolder: String = "media", htmlFolder: String = "html") {
         self.name = name
         self.baseURL = baseURL
-        self.videoFolder = videoFolder
+        self.mediaFolder = videoFolder
         self.htmlFolder = htmlFolder
     }
     @Relationship(deleteRule: .cascade)

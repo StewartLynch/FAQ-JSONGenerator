@@ -37,7 +37,7 @@ class AppFormModel {
         self.application = application
         self.name = application.name
         self.baseURL = application.baseURL
-        self.mediaFolder = application.videoFolder
+        self.mediaFolder = application.mediaFolder
         self.htmlFolder = application.htmlFolder
     }
     

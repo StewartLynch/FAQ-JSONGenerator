@@ -27,7 +27,7 @@ enum InOutService {
             case .video:
                 newExportFAQ.link = ExportJSON.Link(
                     title: faq.link.title,
-                    url: application.baseURL + application.videoFolder + "/" + faq.link.url
+                    url: application.baseURL + application.mediaFolder + "/" + faq.link.url
                 )
             case .weblink:
                 newExportFAQ.link = ExportJSON.Link(

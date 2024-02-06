@@ -33,7 +33,7 @@ struct AppFormView: View {
                         if model.updating {
                             model.application?.name = model.name
                             model.application?.baseURL = model.baseURLPath
-                            model.application?.videoFolder = model.mediaFolder
+                            model.application?.mediaFolder = model.mediaFolder
                             model.application?.htmlFolder = model.htmlFolder
                         } else {
                             let newApp = Application(
