@@ -16,14 +16,25 @@ import Foundation
 class FAQService {
     var faqs: [FAQ] = []
     var loading = false
-    let jsonURL: String
-    init(_ jsonURL: String) {
-        self.jsonURL = jsonURL
+    let jsonURLString: String
+    init(_ jsonURLString: String) {
+        self.jsonURLString = jsonURLString
+    }
+    var jsonURL: URL {
+        URL(string: jsonURLString)!
+    }
+    
+    var baseURL: URL {
+        jsonURL.deletingLastPathComponent()
+    }
+    
+    var baseURLString: String {
+        baseURL.absoluteString
     }
     
     func fetchFAQs() async {
         do {
-            let (data, _) = try  await URLSession.shared.data(from: URL(string: jsonURL)!)
+            let (data, _) = try  await URLSession.shared.data(from: URL(string: jsonURLString)!)
             faqs = try JSONDecoder().decode(
                 [FAQ].self,
                 from: data

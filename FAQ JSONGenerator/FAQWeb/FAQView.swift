@@ -13,7 +13,7 @@
 import SwiftUI
 
 struct FAQView: View {
-    @State private var faqService = FAQService("https://stewartlynch.github.io/FAQ/FAQGenerator/FAQGenerator.json")
+    @State private var faqService = FAQService("https://stewartlynch.github.io/FAQ/SampleApplication/SampleApplication.json")
     @State private var groupedByLevel =  [Int: [FAQ]]()
     @Environment(\.dismiss) private var dismiss
     func levelString(_ level: Int) -> String {
@@ -40,7 +40,7 @@ struct FAQView: View {
                         ForEach(groupedByLevel.keys.sorted(), id: \.self) { key in
                             Section(header: Text(levelString(key))) {
                                 ForEach(groupedByLevel[key]!) { faq in
-                                    QuestionView(faq: faq)
+                                    QuestionView(faq: faq, baseURL: faqService.baseURL)
                                 }
                             }
                         }
@@ -70,6 +70,7 @@ struct QuestionView: View {
     @State private var showWebView = false
     @Environment(\.dismiss) private var dismiss
     let faq: FAQ
+    let baseURL: URL
     var body: some View {
         DisclosureGroup(
             isExpanded: $showAnswer,
@@ -78,7 +79,7 @@ struct QuestionView: View {
                     Text(faq.answer)
                         .foregroundStyle(.secondary)
                     if let link = faq.link {
-                        if faq.linkType == FAQ.FAQLinkType.video.rawValue {
+                        if faq.linkType != FAQ.FAQLinkType.external.rawValue {
                             Button {
                                 showWebView.toggle()
                             } label: {
@@ -88,7 +89,7 @@ struct QuestionView: View {
                             .sheet(isPresented: $showWebView) {
 #if os(iOS)
                                 VStack {
-                                    FAQWebView(url: link.url)
+                                    FAQWebView(url: faq.linkURL(baseURL: baseURL)!)
                                     Button("Dismiss") {
                                         dismiss()
                                     }
@@ -96,7 +97,7 @@ struct QuestionView: View {
                                 }
 #else
                                 VStack {
-                                    FAQWebView(url: link.url)
+                                    FAQWebView(url: faq.linkURL(baseURL: baseURL)!)
                                         .frame(maxWidth: .infinity, alignment: .trailing)
                                     Text("Press escape to exit video view")
                                         .padding()
@@ -111,8 +112,10 @@ struct QuestionView: View {
                                 )
 #endif
                             }
-                        } else {
-                            Link(link.title, destination: link.url)
+                        } 
+                        
+                        else {
+                            Link(link.title, destination: faq.linkURL(baseURL: baseURL)!)
                                 .buttonStyle(.bordered)
                         }
                     }
@@ -123,7 +126,6 @@ struct QuestionView: View {
                 HStack(alignment: .top) {
                     Image(systemName: faq.qImage)
                         .imageScale(.medium)
-                        .foregroundColor(.accent)
                     Text(faq.question)
                         .fontWeight(.semibold)
                 }

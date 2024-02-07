@@ -21,9 +21,7 @@ struct AppFormView: View {
         NavigationStack {
             Form {
                 TextField("App Name", text: $model.name)
-                TextField("Base URL", text: $model.baseURL)
-                TextField("Media Folder", text: $model.mediaFolder)
-                TextField("HTML Folder", text: $model.htmlFolder)
+
             }
             .padding()
             .frame(width: 500)
@@ -32,15 +30,9 @@ struct AppFormView: View {
                     Button(model.updating ? "Update" : "Create") {
                         if model.updating {
                             model.application?.name = model.name
-                            model.application?.baseURL = model.baseURLPath
-                            model.application?.mediaFolder = model.mediaFolder
-                            model.application?.htmlFolder = model.htmlFolder
                         } else {
                             let newApp = Application(
-                                name: model.name,
-                                baseURL: model.baseURLPath,
-                                videoFolder: model.mediaFolder,
-                                htmlFolder: model.htmlFolder
+                                name: model.name
                             )
                             modelContext.insert(newApp)
                         }

@@ -16,13 +16,6 @@ import SwiftData
 @Observable
 class AppFormModel {
     var name: String = ""
-    var baseURL: String = ""
-    var mediaFolder: String = "media"
-    var htmlFolder: String = "html"
-    var baseURLPath: String {
-        baseURL.last == "/" ? baseURL : baseURL + "/"
-    }
-    
     var application:Application?
     
     var updating: Bool {
@@ -30,15 +23,12 @@ class AppFormModel {
     }
     
     var disabled: Bool {
-        name.isEmpty || baseURL.isEmpty || mediaFolder.isEmpty || htmlFolder.isEmpty
+        name.isEmpty
     }
     
     init(application: Application) {
         self.application = application
         self.name = application.name
-        self.baseURL = application.baseURL
-        self.mediaFolder = application.mediaFolder
-        self.htmlFolder = application.htmlFolder
     }
     
     init() {

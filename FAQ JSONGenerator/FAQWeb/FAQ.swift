@@ -15,7 +15,8 @@ import SwiftUI
 struct FAQ: Codable, Identifiable, Hashable {
     struct Link: Codable, Hashable {
         var title: String
-        var url: URL
+        var url: String
+        
     }
 
     enum FAQLinkType: String, Codable {
@@ -33,6 +34,25 @@ struct FAQ: Codable, Identifiable, Hashable {
     let answer: String
     let linkType: String
     let link: Link?
+    
+    func linkURL(baseURL: URL) -> URL? {
+        if let type = FAQLinkType(rawValue: linkType) , let link {
+            switch type {
+            case .none:
+                 return nil
+            case .image:
+                return baseURL.appending(path: "media").appending(path: link.url)
+            case .video:
+                return baseURL.appending(path: "media").appending(path: link.url)
+            case .weblink:
+                return baseURL.appending(path: "html").appending(path: link.url)
+            case .external:
+                return URL(string: link.url)!
+            }
+        } else {
+            return nil
+        }
+    }
     
     var qImage: String {
         if let  linkENum = FAQLinkType(rawValue: linkType) {

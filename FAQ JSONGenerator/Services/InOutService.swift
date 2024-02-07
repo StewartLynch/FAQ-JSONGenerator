@@ -24,15 +24,10 @@ enum InOutService {
                 linkType: faq.linkType
             )
             switch faq.linkTypeEnum {
-            case .video, .image:
+            case .video, .image, .weblink:
                 newExportFAQ.link = ExportJSON.Link(
                     title: faq.link.title,
-                    url: application.baseURL + application.mediaFolder + "/" + faq.link.url
-                )
-            case .weblink:
-                newExportFAQ.link = ExportJSON.Link(
-                    title: faq.link.title,
-                    url: application.baseURL + application.htmlFolder  + "/" + faq.link.url
+                    url: faq.link.url
                 )
             case .external:
                 newExportFAQ.link = ExportJSON.Link(

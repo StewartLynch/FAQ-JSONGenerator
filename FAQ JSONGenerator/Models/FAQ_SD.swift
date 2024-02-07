@@ -16,14 +16,14 @@ import SwiftData
 @Model
 class Application {
     var name: String
-    var baseURL: String
-    var mediaFolder: String = "media"
-    var htmlFolder: String = "html"
-    init(name: String, baseURL: String, videoFolder: String = "media", htmlFolder: String = "html") {
+//    var baseURL: String
+//    var mediaFolder: String = "media"
+//    var htmlFolder: String = "html"
+    init(name: String) {
         self.name = name
-        self.baseURL = baseURL
-        self.mediaFolder = videoFolder
-        self.htmlFolder = htmlFolder
+//        self.baseURL = baseURL
+//        self.mediaFolder = videoFolder
+//        self.htmlFolder = htmlFolder
     }
     @Relationship(deleteRule: .cascade)
     var faqs: [FAQ_SD] = []
@@ -38,7 +38,7 @@ extension Application {
                 isStoredInMemoryOnly: true
             )
         )
-        let apps = [Application(name: "TripMapper", baseURL: ""), Application(name: "My Workouts", baseURL: "")]
+        let apps = [Application(name: "TripMapper"), Application(name: "My Workouts")]
         let links: [LinkType : Link_SD] = [
             .video : Link_SD(title: "Watch Video", url: "https://www.createchsol.com"),
             .weblink : Link_SD(title: "More Information", url: "https://www.createchsol.com")
