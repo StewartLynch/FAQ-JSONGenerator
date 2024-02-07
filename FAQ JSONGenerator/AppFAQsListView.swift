@@ -40,7 +40,6 @@ struct AppFAQsListView: View {
                                 HStack  {
                                     Image(systemName: faq.qImage)
                                     Text(faq.question)
-//                                    Text("\(faq.sortOrder)")
                                 }.tag(faq)
                             }
                             .onMove { from, to in
@@ -146,6 +145,7 @@ struct AppFAQsListView: View {
                     appState.fAQ = nil
                     if let index = application.faqs.firstIndex(where: {$0.id == faq.id}) {
                         application.faqs.remove(at: index)
+                        try? modelContext.save()
                     }
                     appState.needsListRefresh = true
                 }
@@ -184,7 +184,6 @@ struct AppFAQsListView: View {
     
     func resort(level: Int) {
         if let application, !application.faqs.isEmpty {
-            //            sortedFAQs = application.faqs.sorted {$0.sortOrder < $1.sortOrder}.filter{$0.level == level}
             sortedFAQs.indices.forEach { index in
                 sortedFAQs[index].sortOrder = index + 1
             }

@@ -12,7 +12,6 @@
 
 import SwiftUI
 
-
 struct FAQFormModel {
     var level: Int = 1
     var question: String = ""
@@ -25,6 +24,14 @@ struct FAQFormModel {
     
     var isNew: Bool {
         application != nil
+    }
+    
+    var disabled: Bool {
+        question.isEmpty || answer.isEmpty || (
+            linkType != .none && (
+                linkTitle.isEmpty || linkURL.isEmpty
+            )
+        )
     }
     
     init(application: Application) {

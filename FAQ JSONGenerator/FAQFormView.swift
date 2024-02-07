@@ -28,12 +28,10 @@ struct FAQFormView: View {
                     VStack {
                         Form {
                             Section(header: Text("Question"))  {
-                                TextEditor(text: $model.question)
-                                    .frame(height: 100)
+                                TextField("", text: $model.question, axis: .vertical)
                             }
                             Section(header: Text("Answer")) {
-                                TextEditor(text: $model.answer)
-                                    .frame(height: 100)
+                                TextField("", text: $model.answer, axis: .vertical)
                             }
                             Section(header: Text("Level")) {
                                 Picker("", selection: $model.level) {
@@ -69,11 +67,42 @@ struct FAQFormView: View {
                                         .frame(width: 400)
                                 }
                             }
-                            
+                            if model.isNew {
+                                        HStack {
+                                            Spacer()
+                                            Button("Cancel") {
+                                                dismiss()
+                                            }
+                                            Button("Add") {
+                                                let newFAQ = FAQ_SD(
+                                                    level: model.level,
+                                                    sortOrder: (appState.application?.faqs.count ?? 0) + 1,
+                                                    question: model.question,
+                                                    answer: model.answer
+                                                )
+                                                newFAQ.linkType = model.linkType.rawValue
+                                                if let application = appState.application {
+                                                    application.faqs.append(newFAQ)
+                                                    try? modelContext.save()
+                                                }
+                                                if model.linkType != .none {
+                                                    newFAQ.link.title = model.linkTitle
+                                                    newFAQ.link.url = model.linkURL
+                                                }
+                                                appState.needsListRefresh = true
+                                                dismiss()
+                                        }
+                                            .buttonStyle(GreenButtonStyle(disabled: model.disabled))
+                                            .disabled(model.disabled)
+                                    }
+                            }
                             if !model.isNew {
                                 HStack {
                                     Spacer()
                                     if changed {
+                                        Button("Cancel") {
+                                            appState.fAQ = nil
+                                        }
                                         Button("Update") {
                                             let needsListRefresh = appState.fAQ?.level != model.level
                                             appState.needsListRefresh = needsListRefresh
@@ -90,6 +119,8 @@ struct FAQFormView: View {
                                             }
                                             appState.fAQ = nil
                                         }
+                                        .buttonStyle(GreenButtonStyle(disabled: model.disabled))
+                                        .disabled(model.disabled)
                                     }
                                 }
                             }
@@ -98,36 +129,6 @@ struct FAQFormView: View {
                         Spacer()
                     }
                     .frame(width: 500)
-                    .toolbar {
-                        if model.isNew {
-                            ToolbarItem(placement: .cancellationAction) {
-                                Button("Cancel") {
-                                    dismiss()
-                                }
-                            }
-                            ToolbarItem(placement: .confirmationAction) {
-                                Button("Add") {
-                                    let newFAQ = FAQ_SD(
-                                        level: model.level,
-                                        sortOrder: (appState.application?.faqs.count ?? 0) + 1,
-                                        question: model.question,
-                                        answer: model.answer
-                                    )
-                                    newFAQ.linkType = model.linkType.rawValue
-                                    if let application = appState.application {
-                                        application.faqs.append(newFAQ)
-                                        try? modelContext.save()
-                                    }
-                                    if model.linkType != .none {
-                                        newFAQ.link.title = model.linkTitle
-                                        newFAQ.link.url = model.linkURL
-                                    }
-                                    appState.needsListRefresh = true
-                                    dismiss()
-                                }
-                            }
-                        }
-                    }
                 } else {
                     ContentUnavailableView("Select FAQ", systemImage: "hand.point.left.fill")
                 }
@@ -165,4 +166,26 @@ struct FAQFormView: View {
     appState.fAQ = faq
     return FAQFormView(model: FAQFormModel())
         .environment(appState)
+}
+
+struct GreenButtonStyle: ButtonStyle {
+    var disabled: Bool
+    func makeBody(configuration: Self.Configuration) -> some View {
+        if disabled {
+            configuration.label
+                .padding(2)
+                .padding(.horizontal)
+                .foregroundStyle(.secondary)
+                .background(Color(.secondarySystemFill))
+                .cornerRadius(6.0)
+                
+        } else {
+            configuration.label
+                .padding(2)
+                .padding(.horizontal)
+                .foregroundStyle(configuration.isPressed ? Color.accent  : Color.white)
+                .background(configuration.isPressed ? Color.white : Color.accent)
+                .cornerRadius(6.0)
+        }
+    }
 }
