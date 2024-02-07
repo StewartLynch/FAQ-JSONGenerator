@@ -16,16 +16,16 @@
 		BB14AC8A2B6C4ABB0055A23C /* AppFAQsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB14AC892B6C4ABB0055A23C /* AppFAQsListView.swift */; };
 		BB14AC8C2B6C4ADE0055A23C /* FAQFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB14AC8B2B6C4ADE0055A23C /* FAQFormView.swift */; };
 		BB14AC8E2B6C4F5D0055A23C /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB14AC8D2B6C4F5D0055A23C /* AppState.swift */; };
+		BB1FCEFF2B74412C004A29D6 /* FAQService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1FCEFB2B74412C004A29D6 /* FAQService.swift */; };
+		BB1FCF002B74412C004A29D6 /* FAQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1FCEFC2B74412C004A29D6 /* FAQ.swift */; };
+		BB1FCF012B74412C004A29D6 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1FCEFD2B74412C004A29D6 /* FAQView.swift */; };
+		BB1FCF022B74412C004A29D6 /* FAQWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1FCEFE2B74412C004A29D6 /* FAQWebView.swift */; };
 		BB276E502B6CBDF90022BAC1 /* FAQFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB276E4F2B6CBDF90022BAC1 /* FAQFormModel.swift */; };
 		BB2AD6962B70A9E600F76CE8 /* DisplayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2AD6952B70A9E600F76CE8 /* DisplayMode.swift */; };
 		BB2AD6982B70AC7C00F76CE8 /* Menus.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2AD6972B70AC7C00F76CE8 /* Menus.swift */; };
 		BB2EC1872B7050F4007CD12D /* InOutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2EC1862B7050F4007CD12D /* InOutService.swift */; };
 		BB57A23C2B6EDD160031F923 /* ExportJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB57A23B2B6EDD160031F923 /* ExportJSON.swift */; };
 		BB57A23F2B6EEDA00031F923 /* AppFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB57A23E2B6EEDA00031F923 /* AppFormModel.swift */; };
-		BB67EE222B71750B00F8D67D /* FAQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB67EE212B71750B00F8D67D /* FAQ.swift */; };
-		BB67EE282B71757200F8D67D /* FAQService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB67EE272B71757200F8D67D /* FAQService.swift */; };
-		BB67EE2C2B7175EC00F8D67D /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB67EE2B2B7175EC00F8D67D /* FAQView.swift */; };
-		BB67EE2E2B717EE700F8D67D /* FAQWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB67EE2D2B717EE700F8D67D /* FAQWebView.swift */; };
 		BB89DED52B7059D3000D930F /* AppFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB89DED42B7059D3000D930F /* AppFormView.swift */; };
 		BB89DED72B705A99000D930F /* AppFormType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB89DED62B705A99000D930F /* AppFormType.swift */; };
 /* End PBXBuildFile section */
@@ -42,16 +42,16 @@
 		BB14AC892B6C4ABB0055A23C /* AppFAQsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFAQsListView.swift; sourceTree = "<group>"; };
 		BB14AC8B2B6C4ADE0055A23C /* FAQFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQFormView.swift; sourceTree = "<group>"; };
 		BB14AC8D2B6C4F5D0055A23C /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		BB1FCEFB2B74412C004A29D6 /* FAQService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAQService.swift; sourceTree = "<group>"; };
+		BB1FCEFC2B74412C004A29D6 /* FAQ.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAQ.swift; sourceTree = "<group>"; };
+		BB1FCEFD2B74412C004A29D6 /* FAQView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
+		BB1FCEFE2B74412C004A29D6 /* FAQWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAQWebView.swift; sourceTree = "<group>"; };
 		BB276E4F2B6CBDF90022BAC1 /* FAQFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQFormModel.swift; sourceTree = "<group>"; };
 		BB2AD6952B70A9E600F76CE8 /* DisplayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayMode.swift; sourceTree = "<group>"; };
 		BB2AD6972B70AC7C00F76CE8 /* Menus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menus.swift; sourceTree = "<group>"; };
 		BB2EC1862B7050F4007CD12D /* InOutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InOutService.swift; sourceTree = "<group>"; };
 		BB57A23B2B6EDD160031F923 /* ExportJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportJSON.swift; sourceTree = "<group>"; };
 		BB57A23E2B6EEDA00031F923 /* AppFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFormModel.swift; sourceTree = "<group>"; };
-		BB67EE212B71750B00F8D67D /* FAQ.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAQ.swift; sourceTree = "<group>"; };
-		BB67EE272B71757200F8D67D /* FAQService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQService.swift; sourceTree = "<group>"; };
-		BB67EE2B2B7175EC00F8D67D /* FAQView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
-		BB67EE2D2B717EE700F8D67D /* FAQWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAQWebView.swift; sourceTree = "<group>"; };
 		BB89DED42B7059D3000D930F /* AppFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFormView.swift; sourceTree = "<group>"; };
 		BB89DED62B705A99000D930F /* AppFormType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFormType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,10 +135,10 @@
 		BB67EE202B7174E600F8D67D /* FAQWeb */ = {
 			isa = PBXGroup;
 			children = (
-				BB67EE2B2B7175EC00F8D67D /* FAQView.swift */,
-				BB67EE212B71750B00F8D67D /* FAQ.swift */,
-				BB67EE272B71757200F8D67D /* FAQService.swift */,
-				BB67EE2D2B717EE700F8D67D /* FAQWebView.swift */,
+				BB1FCEFC2B74412C004A29D6 /* FAQ.swift */,
+				BB1FCEFB2B74412C004A29D6 /* FAQService.swift */,
+				BB1FCEFD2B74412C004A29D6 /* FAQView.swift */,
+				BB1FCEFE2B74412C004A29D6 /* FAQWebView.swift */,
 			);
 			path = FAQWeb;
 			sourceTree = "<group>";
@@ -226,18 +226,18 @@
 				BB2AD6962B70A9E600F76CE8 /* DisplayMode.swift in Sources */,
 				BB2AD6982B70AC7C00F76CE8 /* Menus.swift in Sources */,
 				BB14AC8C2B6C4ADE0055A23C /* FAQFormView.swift in Sources */,
+				BB1FCEFF2B74412C004A29D6 /* FAQService.swift in Sources */,
+				BB1FCF002B74412C004A29D6 /* FAQ.swift in Sources */,
 				BB276E502B6CBDF90022BAC1 /* FAQFormModel.swift in Sources */,
 				BB14AC8A2B6C4ABB0055A23C /* AppFAQsListView.swift in Sources */,
 				BB14AC8E2B6C4F5D0055A23C /* AppState.swift in Sources */,
 				BB2EC1872B7050F4007CD12D /* InOutService.swift in Sources */,
-				BB67EE282B71757200F8D67D /* FAQService.swift in Sources */,
+				BB1FCF022B74412C004A29D6 /* FAQWebView.swift in Sources */,
 				BB57A23F2B6EEDA00031F923 /* AppFormModel.swift in Sources */,
 				BB57A23C2B6EDD160031F923 /* ExportJSON.swift in Sources */,
 				BB89DED52B7059D3000D930F /* AppFormView.swift in Sources */,
+				BB1FCF012B74412C004A29D6 /* FAQView.swift in Sources */,
 				BB89DED72B705A99000D930F /* AppFormType.swift in Sources */,
-				BB67EE2E2B717EE700F8D67D /* FAQWebView.swift in Sources */,
-				BB67EE2C2B7175EC00F8D67D /* FAQView.swift in Sources */,
-				BB67EE222B71750B00F8D67D /* FAQ.swift in Sources */,
 				BB14AC882B6C4A650055A23C /* ApplicationListView.swift in Sources */,
 				BB14AC742B6C2A750055A23C /* FAQ_JSONGeneratorApp.swift in Sources */,
 				BB14AC842B6C2C580055A23C /* FAQ_SD.swift in Sources */,

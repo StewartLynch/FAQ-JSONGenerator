@@ -16,14 +16,8 @@ import SwiftData
 @Model
 class Application {
     var name: String
-//    var baseURL: String
-//    var mediaFolder: String = "media"
-//    var htmlFolder: String = "html"
     init(name: String) {
         self.name = name
-//        self.baseURL = baseURL
-//        self.mediaFolder = videoFolder
-//        self.htmlFolder = htmlFolder
     }
     @Relationship(deleteRule: .cascade)
     var faqs: [FAQ_SD] = []

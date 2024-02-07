@@ -1,6 +1,5 @@
 //
-// Created for TripMapper
-// by  Stewart Lynch on 2024-01-31
+// Created for FAQ JSON Generator
 //
 // Follow me on Mastodon: @StewartLynch@iosdev.space
 // Follow me on Threads: @StewartLynch (https://www.threads.net)

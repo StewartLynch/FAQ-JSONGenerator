@@ -1,6 +1,5 @@
 //
 // Created for FAQ JSONGenerator
-// by  Stewart Lynch on 2024-02-05
 //
 // Follow me on Mastodon: @StewartLynch@iosdev.space
 // Follow me on Threads: @StewartLynch (https://www.threads.net)

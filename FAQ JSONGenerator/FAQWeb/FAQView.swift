@@ -1,6 +1,5 @@
 //
-// Created for TripMapper
-// by  Stewart Lynch on 2024-01-31
+// Created for FAQ JSON Generator
 //
 // Follow me on Mastodon: @StewartLynch@iosdev.space
 // Follow me on Threads: @StewartLynch (https://www.threads.net)
@@ -13,7 +12,7 @@
 import SwiftUI
 
 struct FAQView: View {
-    @State private var faqService = FAQService("https://stewartlynch.github.io/FAQ/SampleApplication/SampleApplication.json")
+    @State private var faqService = FAQService("https://stewartlynch.github.io/FAQ/FAQGenerator/FAQGenerator.json")
     @State private var groupedByLevel =  [Int: [FAQ]]()
     @Environment(\.dismiss) private var dismiss
     func levelString(_ level: Int) -> String {
@@ -51,8 +50,10 @@ struct FAQView: View {
             .navigationTitle("FAQ")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction){
-                    Button("Close") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
                     }
                 }
             }
@@ -91,15 +92,17 @@ struct QuestionView: View {
                                 VStack {
                                     FAQWebView(url: faq.linkURL(baseURL: baseURL)!)
                                     Button("Dismiss") {
-                                        dismiss()
+                                        showWebView = false
                                     }
+                                    .buttonStyle(.bordered)
+                                    .padding()
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                 }
 #else
                                 VStack {
                                     FAQWebView(url: faq.linkURL(baseURL: baseURL)!)
                                         .frame(maxWidth: .infinity, alignment: .trailing)
-                                    Text("Press escape to exit video view")
+                                    Text("Press escape to exit view")
                                         .padding()
                                 }
                                 .frame(
@@ -112,7 +115,7 @@ struct QuestionView: View {
                                 )
 #endif
                             }
-                        } 
+                        }
                         
                         else {
                             Link(link.title, destination: faq.linkURL(baseURL: baseURL)!)
