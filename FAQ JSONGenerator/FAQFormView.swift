@@ -128,7 +128,7 @@ struct FAQFormView: View {
                         .padding()
                         Spacer()
                     }
-                    .frame(width: 500)
+                    .frame(width: 500, height: 500)
                 } else {
                     ContentUnavailableView("Select FAQ", systemImage: "hand.point.left.fill")
                 }
